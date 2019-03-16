@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="uft-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Fixation</title>
+  <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Lekton:400,700,400italic'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="/bundle.css">
+</head>
+<body class="mdc-typography">
+  <aside class="mdc-drawer mdc-drawer--modal">
+    <div class="mdc-drawer__header">
+      <h3 class="mdc-drawer__title">Fixation</h3>
+    </div>
+    <div class="mdc-drawer__content">
+      <nav class="mdc-list">
+        <a class="mdc-list-item mdc-list-item--activated" href="/diagnosis" aria-selected="true">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">scatter_plot</i>
+          <span class="mdc-list-item__text">Diagnosis</span>
+        </a>
+        <a class="mdc-list-item" href="/record">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">fiber_manual_record</i>
+          <span class="mdc-list-item__text">Record</span>
+        </a>
+        <a class="mdc-list-item" href="/replay">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">play_circle_filled</i>
+          <span class="mdc-list-item__text">Replay</span>
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="mdc-drawer-scrim"></div>
+  <header class="mdc-top-app-bar" id="app-bar">
+    <div class="mdc-top-app-bar__row">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+        <span class="material-icons mdc-top-app-bar__navigation-icon">menu</span>
+        <span class="mdc-top-app-bar__title">Fixation</span>
+      </section>
+    </div>
+  </header>
+  <main id="view" class="mdc-top-app-bar--fixed-adjust"></main>
+  <script src="/bundle.js" async></script>
+</body>

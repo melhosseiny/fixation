@@ -1,0 +1,84 @@
+$mdc-theme-primary: #4b4b4b;
+$mdc-theme-secondary: #41b6a3;
+$mdc-theme-background: #232323;
+$mdc-theme-on-primary: #ffffff;
+$mdc-theme-on-secondary: #ffffff;
+
+$mdc-typography-font-family: "Lekton";
+
+@import "@material/button/mdc-button";
+@import "@material/layout-grid/mdc-layout-grid";
+@import "@material/top-app-bar/mdc-top-app-bar";
+@import "@material/form-field/mdc-form-field";
+@import "@material/checkbox/mdc-checkbox";
+@import "@material/drawer/mdc-drawer";
+@import "@material/list/mdc-list";
+@import "@material/typography/mdc-typography";
+@import "@material/switch/mdc-switch";
+@import "@material/icon-button/mdc-icon-button";
+
+body {
+  background-color: #232323;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+canvas#a, video {
+  width: 100%;
+}
+
+video {
+  background-color: #000;
+}
+
+.record-button i {
+  color: red;
+}
+
+.fixated {
+  border: 1px solid orange;
+}
+
+#canvas-ctrl {
+  display: flex;
+  align-items: center;
+}
+
+#canvas-ctrl img {
+  vertical-align: middle;
+}
+
+#canvas-ctrl a, #canvas-ctrl a:link, #canvas-ctrl a:visited, #canvas-ctrl a:hover, #canvas-ctrl a:active {
+  border-bottom: none;
+}
+
+input[type='range'] {
+  flex: 1;
+  -webkit-appearance: none;
+  background-color: #757575;
+  height: 3px;
+  -webkit-transition: height ease-in 100ms;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+input[type='range']:hover {
+  height: 12px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border-radius: 20%;
+  background-color: #444;
+  width: 10px;
+  height: 20px;
+}
+
+#start {
+  margin-left: 1em;
+}
+
+#total-time {
+  color: #757575;
+}
