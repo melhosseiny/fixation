@@ -8390,6 +8390,12 @@ function Storage() {
     }
   };
 
+  var clear = async function clear(cacheName, callback) {
+    caches.delete(cacheName).then(function (deleted) {
+      return callback(deleted);
+    });
+  };
+
   var getKeys = async function getKeys(cacheName, callback) {
     var cache = await caches.open(cacheName);
     cache.keys().then(function (keys) {
@@ -8397,10 +8403,16 @@ function Storage() {
     });
   };
 
+  var usage = function usage(callback) {
+    return navigator.storage.estimate();
+  };
+
   return Object.freeze({
     put: put,
     get: get,
-    getKeys: getKeys
+    clear: clear,
+    getKeys: getKeys,
+    usage: usage
   });
 }
 
@@ -15998,6 +16010,8 @@ var _replay = __webpack_require__(86);
 
 var _lost = __webpack_require__(89);
 
+var _data = __webpack_require__(91);
+
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 var drawer = _drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
@@ -16053,7 +16067,7 @@ var loadPage = function loadPage(page) {
 
       var player = document.getElementById('player');
 
-      navigator.getDisplayMedia({ video: true }).then(function (stream) {
+      navigator.mediaDevices.getDisplayMedia({ video: true }).then(function (stream) {
         player.srcObject = stream;
       }).catch(function (err) {
         console.log("Screen media:", err);
@@ -16064,6 +16078,11 @@ var loadPage = function loadPage(page) {
       active = replay;
       var heatmapControl = new _switch.MDCSwitch(document.querySelector('.mdc-switch'));
       replay.connect(document.getElementById('a').getContext('2d'));
+      break;
+    case 'data':
+      var data = (0, _data.Data)({});
+      active = data;
+      data.connect();
       break;
     default:
       page = 'view404';
@@ -31485,6 +31504,196 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 
 var template = exports.template = function template(data) {
   return (0, _litHtml.html)(_templateObject);
+};
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Data = Data;
+
+var _storage = __webpack_require__(43);
+
+var _litHtml = __webpack_require__(0);
+
+var _luxon = __webpack_require__(44);
+
+var _template = __webpack_require__(92);
+
+function Data(spec) {
+  var storage = (0, _storage.Storage)({});
+  var frames = [];
+
+  var data = {
+    max: 1000,
+    exportData: exportData,
+    deleteData: deleteData
+  };
+
+  function download(content, fileName, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+  }
+
+  var exportData = function exportData() {
+    download(JSON.stringify(frames), 'experiment' + _luxon.DateTime.local().toMillis() + '.json', 'text/json');
+    console.log(frames);
+  };
+
+  var deleteData = function deleteData() {
+    storage.clear("gaze", function (deleted) {
+      console.log("cache deleted", deleted);
+    });
+  };
+
+  var load = function load(start) {
+    for (var frame = start; frame <= data.max; frame++) {
+      storage.get(frame, function (v) {
+        if (v) {
+          frames.push(v);
+          //console.log(frames.length);
+          if (frames.length === data.max) {
+            data.totalTime = _luxon.Duration.fromMillis(frames[data.max - 1].timestamp - frames[0].timestamp).toFormat("hh:mm:ss");
+            (0, _litHtml.render)((0, _template.template)(data), document.getElementById("view"));
+            console.log("max reached");
+          }
+        }
+      });
+    }
+  };
+
+  var handleFileSelect = function handleFileSelect(evt) {
+    document.getElementById('drop').classList.remove('dragover');
+    console.log("file dropped", evt);
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    var files = evt.dataTransfer.files; // FileList object.
+    var file = files[0];
+    data.f = file;
+
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      console.log("file loaded", e);
+      var data = JSON.parse(e.target.result);
+      deleteData();
+      data.forEach(function (document, id) {
+        caches.open('gaze').then(function (cache) {
+          var options = {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          };
+          cache.put('/gaze/' + id, new Response(JSON.stringify(document)));
+        });
+      });
+    };
+    reader.onprogress = function (e) {
+      if (e.lengthComputable) {
+        var percentLoaded = Math.round(e.loaded / e.total * 100);
+        console.log(percentLoaded);
+        data.progress = percentLoaded;
+        (0, _litHtml.render)((0, _template.template)(data), document.getElementById("view"));
+      }
+    };
+
+    reader.readAsText(file);
+    (0, _litHtml.render)((0, _template.template)(data), document.getElementById("view"));
+  };
+
+  var handleDragOver = function handleDragOver(evt) {
+    document.getElementById('drop').classList.add('dragover');
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+  };
+
+  var handleDragLeave = function handleDragLeave(evt) {
+    document.getElementById('drop').classList.remove('dragover');
+    evt.stopPropagation();
+    evt.preventDefault();
+  };
+
+  var connect = async function connect(context) {
+    (0, _litHtml.render)((0, _template.template)(data), document.getElementById("view"));
+    var usage = await storage.usage();
+    console.log("usage", usage);
+    data.usage = usage;
+    storage.getKeys("gaze", function (keys) {
+      data.max = keys.length;
+      (0, _litHtml.render)((0, _template.template)(data), document.getElementById("view"));
+      console.log("max", data.max);
+      load(0);
+    });
+
+    // Setup the dnd listeners.
+    var dropZone = document.getElementById('drop');
+    dropZone.addEventListener('dragover', handleDragOver, false);
+    dropZone.addEventListener('dragleave', handleDragLeave, false);
+    dropZone.addEventListener('drop', handleFileSelect, false);
+  };
+
+  var disconnect = function disconnect() {
+    //socket.disconnect();
+    console.log("disconnect from data");
+  };
+
+  return Object.freeze({
+    connect: connect,
+    disconnect: disconnect
+  });
+}
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.template = undefined;
+
+var _templateObject = _taggedTemplateLiteral(["\n  <div class=\"mdc-layout-grid\">\n    <div class=\"mdc-layout-grid__inner\">\n      <div class=\"mdc-layout-grid__cell--span-8\">\n        <div id=\"drop\">Import data</div>\n        <progress value=\"", "\" max=\"100\"></progress>\n        ", "\n        <h2>Cache Content</h2>\n        <div>Frames: ", "</div>\n        <div>Duration: ", "</div>\n        <h2>Storage usage</h2>\n        ", "\n      </div>\n      <div class=\"mdc-layout-grid__cell--span-4\">\n        <button @click=\"", "\" class=\"mdc-button mdc-button--unelevated record-button\">\n          <span class=\"mdc-button__label\">Export</span>\n        </button>\n        <button @click=\"", "\" class=\"mdc-button mdc-button--unelevated record-button\">\n          <span class=\"mdc-button__label\">Clear</span>\n        </button>\n      </div>\n    </div>\n  </div>\n"], ["\n  <div class=\"mdc-layout-grid\">\n    <div class=\"mdc-layout-grid__inner\">\n      <div class=\"mdc-layout-grid__cell--span-8\">\n        <div id=\"drop\">Import data</div>\n        <progress value=\"", "\" max=\"100\"></progress>\n        ", "\n        <h2>Cache Content</h2>\n        <div>Frames: ", "</div>\n        <div>Duration: ", "</div>\n        <h2>Storage usage</h2>\n        ", "\n      </div>\n      <div class=\"mdc-layout-grid__cell--span-4\">\n        <button @click=\"", "\" class=\"mdc-button mdc-button--unelevated record-button\">\n          <span class=\"mdc-button__label\">Export</span>\n        </button>\n        <button @click=\"", "\" class=\"mdc-button mdc-button--unelevated record-button\">\n          <span class=\"mdc-button__label\">Clear</span>\n        </button>\n      </div>\n    </div>\n  </div>\n"]),
+    _templateObject2 = _taggedTemplateLiteral([""], [""]),
+    _templateObject3 = _taggedTemplateLiteral(["\n      <div>Name: ", "</div>\n      <div>Type: ", "</div>\n    "], ["\n      <div>Name: ", "</div>\n      <div>Type: ", "</div>\n    "]),
+    _templateObject4 = _taggedTemplateLiteral(["\n      <div>Quota: ", "</div>\n      <div>Usage: ", " (", " caches)</div>\n    "], ["\n      <div>Quota: ", "</div>\n      <div>Usage: ", " (", " caches)</div>\n    "]);
+
+var _litHtml = __webpack_require__(0);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var template = exports.template = function template(data) {
+  return (0, _litHtml.html)(_templateObject, data.progress, getFileInfo(data), data.max, data.totalTime, getUsage(data), data.exportData, data.deleteData);
+};
+
+var getFileInfo = function getFileInfo(data) {
+  if (!data.f) {
+    return (0, _litHtml.html)(_templateObject2);
+  } else {
+    return (0, _litHtml.html)(_templateObject3, data.f.name, data.f.type);
+  }
+};
+
+var getUsage = function getUsage(data) {
+  console.log("getUsage", data);
+  if (!data.usage) {
+    return (0, _litHtml.html)(_templateObject2);
+  } else {
+    return (0, _litHtml.html)(_templateObject4, data.usage.quota, data.usage.usage, data.usage.usageDetails.caches);
+  }
 };
 
 /***/ })

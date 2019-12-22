@@ -24,14 +24,24 @@ export function Storage(spec = {}) {
     }
   }
 
+  let clear = async function(cacheName, callback) {
+    caches.delete(cacheName).then((deleted) => callback(deleted));
+  }
+
   let getKeys = async function(cacheName, callback) {
     const cache = await caches.open(cacheName);
     cache.keys().then((keys) => callback(keys));
   }
 
+  let usage = function(callback) {
+    return navigator.storage.estimate();
+  }
+
   return Object.freeze({
     put,
     get,
-    getKeys
+    clear,
+    getKeys,
+    usage
   })
 }

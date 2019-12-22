@@ -10,6 +10,7 @@ import {Diagnosis} from './diagnosis/diagnosis.js';
 import {Record} from './record/record.js';
 import {Replay} from './replay/replay.js';
 import {Lost} from './lost/lost.js';
+import {Data} from './data/data.js';
 
 const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
 const topAppBar = MDCTopAppBar.attachTo(document.getElementById('app-bar'));
@@ -62,7 +63,7 @@ const loadPage = function(page) {
 
       const player = document.getElementById('player');
 
-      navigator.getDisplayMedia({video: true})
+      navigator.mediaDevices.getDisplayMedia({video: true})
         .then((stream) => {
           player.srcObject = stream;
         })
@@ -75,6 +76,11 @@ const loadPage = function(page) {
       active = replay;
       let heatmapControl = new MDCSwitch(document.querySelector('.mdc-switch'));
       replay.connect(document.getElementById('a').getContext('2d'));
+      break;
+    case 'data':
+      let data = Data({});
+      active = data;
+      data.connect();
       break;
     default:
       page = 'view404';
