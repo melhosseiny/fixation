@@ -90,7 +90,7 @@ Object.defineProperty(exports, 'defaultTemplateProcessor', {
   }
 });
 
-var _directive = __webpack_require__(23);
+var _directive = __webpack_require__(25);
 
 Object.defineProperty(exports, 'directive', {
   enumerable: true,
@@ -120,7 +120,7 @@ Object.defineProperty(exports, 'reparentNodes', {
   }
 });
 
-var _part = __webpack_require__(24);
+var _part = __webpack_require__(26);
 
 Object.defineProperty(exports, 'noChange', {
   enumerable: true,
@@ -195,7 +195,7 @@ Object.defineProperty(exports, 'render', {
   }
 });
 
-var _templateFactory = __webpack_require__(27);
+var _templateFactory = __webpack_require__(29);
 
 Object.defineProperty(exports, 'templateCaches', {
   enumerable: true,
@@ -210,7 +210,7 @@ Object.defineProperty(exports, 'templateFactory', {
   }
 });
 
-var _templateInstance = __webpack_require__(25);
+var _templateInstance = __webpack_require__(27);
 
 Object.defineProperty(exports, 'TemplateInstance', {
   enumerable: true,
@@ -219,7 +219,7 @@ Object.defineProperty(exports, 'TemplateInstance', {
   }
 });
 
-var _templateResult = __webpack_require__(26);
+var _templateResult = __webpack_require__(28);
 
 Object.defineProperty(exports, 'SVGTemplateResult', {
   enumerable: true,
@@ -456,7 +456,7 @@ Emitter.prototype.hasListeners = function (event) {
  */
 
 var keys = __webpack_require__(71);
-var hasBinary = __webpack_require__(37);
+var hasBinary = __webpack_require__(39);
 var sliceBuffer = __webpack_require__(72);
 var after = __webpack_require__(73);
 var utf8 = __webpack_require__(74);
@@ -2102,15 +2102,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                                                                                                                                                                                                                                                                */
 
 
-var _directive = __webpack_require__(23);
+var _directive = __webpack_require__(25);
 
 var _dom = __webpack_require__(3);
 
-var _part = __webpack_require__(24);
+var _part = __webpack_require__(26);
 
-var _templateInstance = __webpack_require__(25);
+var _templateInstance = __webpack_require__(27);
 
-var _templateResult = __webpack_require__(26);
+var _templateResult = __webpack_require__(28);
 
 var _template = __webpack_require__(4);
 
@@ -2940,7 +2940,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var url = __webpack_require__(59);
 var parser = __webpack_require__(18);
-var Manager = __webpack_require__(34);
+var Manager = __webpack_require__(36);
 var debug = __webpack_require__(6)('socket.io-client');
 
 /**
@@ -3024,8 +3024,8 @@ exports.connect = lookup;
  * @api public
  */
 
-exports.Manager = __webpack_require__(34);
-exports.Socket = __webpack_require__(40);
+exports.Manager = __webpack_require__(36);
+exports.Socket = __webpack_require__(42);
 
 /***/ }),
 /* 16 */
@@ -3388,7 +3388,7 @@ var debug = __webpack_require__(61)('socket.io-parser');
 var Emitter = __webpack_require__(1);
 var binary = __webpack_require__(63);
 var isArray = __webpack_require__(19);
-var isBuf = __webpack_require__(32);
+var isBuf = __webpack_require__(34);
 
 /**
  * Protocol version.
@@ -5547,7 +5547,7 @@ function blitBuffer(src, dst, offset, length) {
 function isnan(val) {
   return val !== val; // eslint-disable-line no-self-compare
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(35)))
 
 /***/ }),
 /* 21 */
@@ -5772,2593 +5772,6 @@ Transport.prototype.onClose = function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */
-var directives = new WeakMap();
-/**
- * Brands a function as a directive so that lit-html will call the function
- * during template rendering, rather than passing as a value.
- *
- * @param f The directive factory function. Must be a function that returns a
- * function of the signature `(part: Part) => void`. The returned function will
- * be called with the part object
- *
- * @example
- *
- * ```
- * import {directive, html} from 'lit-html';
- *
- * const immutable = directive((v) => (part) => {
- *   if (part.value !== v) {
- *     part.setValue(v)
- *   }
- * });
- * ```
- */
-var directive = exports.directive = function directive(f) {
-  return function () {
-    var d = f.apply(undefined, arguments);
-    directives.set(d, true);
-    return d;
-  };
-};
-var isDirective = exports.isDirective = function isDirective(o) {
-  return typeof o === 'function' && directives.has(o);
-};
-//# sourceMappingURL=directive.js.map
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/**
- * A sentinel value that signals that a value was handled by a directive and
- * should not be written to the DOM.
- */
-var noChange = exports.noChange = {};
-//# sourceMappingURL=part.js.map
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.TemplateInstance = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @license
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * This code may only be used under the BSD style license found at
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/LICENSE.txt
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * The complete set of authors may be found at
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/AUTHORS.txt
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * The complete set of contributors may be found at
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/CONTRIBUTORS.txt
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Code distributed by Google as part of the polymer project is also
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * subject to an additional IP rights grant found at
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/PATENTS.txt
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-
-var _dom = __webpack_require__(3);
-
-var _template = __webpack_require__(4);
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * An instance of a `Template` that can be attached to the DOM and updated
- * with new values.
- */
-var TemplateInstance = exports.TemplateInstance = function () {
-    function TemplateInstance(template, processor, options) {
-        _classCallCheck(this, TemplateInstance);
-
-        this._parts = [];
-        this.template = template;
-        this.processor = processor;
-        this.options = options;
-    }
-
-    _createClass(TemplateInstance, [{
-        key: 'update',
-        value: function update(values) {
-            var i = 0;
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = this._parts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var part = _step.value;
-
-                    if (part !== undefined) {
-                        part.setValue(values[i]);
-                    }
-                    i++;
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
-
-            try {
-                for (var _iterator2 = this._parts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _part = _step2.value;
-
-                    if (_part !== undefined) {
-                        _part.commit();
-                    }
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
-                    }
-                } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
-                    }
-                }
-            }
-        }
-    }, {
-        key: '_clone',
-        value: function _clone() {
-            var _this = this;
-
-            // When using the Custom Elements polyfill, clone the node, rather than
-            // importing it, to keep the fragment in the template's document. This
-            // leaves the fragment inert so custom elements won't upgrade and
-            // potentially modify their contents by creating a polyfilled ShadowRoot
-            // while we traverse the tree.
-            var fragment = _dom.isCEPolyfill ? this.template.element.content.cloneNode(true) : document.importNode(this.template.element.content, true);
-            var parts = this.template.parts;
-            var partIndex = 0;
-            var nodeIndex = 0;
-            var _prepareInstance = function _prepareInstance(fragment) {
-                // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be
-                // null
-                var walker = document.createTreeWalker(fragment, 133 /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */, null, false);
-                var node = walker.nextNode();
-                // Loop through all the nodes and parts of a template
-                while (partIndex < parts.length && node !== null) {
-                    var part = parts[partIndex];
-                    // Consecutive Parts may have the same node index, in the case of
-                    // multiple bound attributes on an element. So each iteration we either
-                    // increment the nodeIndex, if we aren't on a node with a part, or the
-                    // partIndex if we are. By not incrementing the nodeIndex when we find a
-                    // part, we allow for the next part to be associated with the current
-                    // node if neccessasry.
-                    if (!(0, _template.isTemplatePartActive)(part)) {
-                        _this._parts.push(undefined);
-                        partIndex++;
-                    } else if (nodeIndex === part.index) {
-                        if (part.type === 'node') {
-                            var _part2 = _this.processor.handleTextExpression(_this.options);
-                            _part2.insertAfterNode(node);
-                            _this._parts.push(_part2);
-                        } else {
-                            var _parts;
-
-                            (_parts = _this._parts).push.apply(_parts, _toConsumableArray(_this.processor.handleAttributeExpressions(node, part.name, part.strings, _this.options)));
-                        }
-                        partIndex++;
-                    } else {
-                        nodeIndex++;
-                        if (node.nodeName === 'TEMPLATE') {
-                            _prepareInstance(node.content);
-                        }
-                        node = walker.nextNode();
-                    }
-                }
-            };
-            _prepareInstance(fragment);
-            if (_dom.isCEPolyfill) {
-                document.adoptNode(fragment);
-                customElements.upgrade(fragment);
-            }
-            return fragment;
-        }
-    }]);
-
-    return TemplateInstance;
-}();
-//# sourceMappingURL=template-instance.js.map
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.SVGTemplateResult = exports.TemplateResult = undefined;
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @license
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * This code may only be used under the BSD style license found at
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/LICENSE.txt
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * The complete set of authors may be found at
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/AUTHORS.txt
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * The complete set of contributors may be found at
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/CONTRIBUTORS.txt
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Code distributed by Google as part of the polymer project is also
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * subject to an additional IP rights grant found at
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/PATENTS.txt
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-
-var _dom = __webpack_require__(3);
-
-var _template = __webpack_require__(4);
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * The return type of `html`, which holds a Template and the values from
- * interpolated expressions.
- */
-var TemplateResult = exports.TemplateResult = function () {
-    function TemplateResult(strings, values, type, processor) {
-        _classCallCheck(this, TemplateResult);
-
-        this.strings = strings;
-        this.values = values;
-        this.type = type;
-        this.processor = processor;
-    }
-    /**
-     * Returns a string of HTML used to create a `<template>` element.
-     */
-
-
-    _createClass(TemplateResult, [{
-        key: 'getHTML',
-        value: function getHTML() {
-            var endIndex = this.strings.length - 1;
-            var html = '';
-            for (var i = 0; i < endIndex; i++) {
-                var s = this.strings[i];
-                // This replace() call does two things:
-                // 1) Appends a suffix to all bound attribute names to opt out of special
-                // attribute value parsing that IE11 and Edge do, like for style and
-                // many SVG attributes. The Template class also appends the same suffix
-                // when looking up attributes to creat Parts.
-                // 2) Adds an unquoted-attribute-safe marker for the first expression in
-                // an attribute. Subsequent attribute expressions will use node markers,
-                // and this is safe since attributes with multiple expressions are
-                // guaranteed to be quoted.
-                var addedMarker = false;
-                html += s.replace(_template.lastAttributeNameRegex, function (_match, whitespace, name, value) {
-                    addedMarker = true;
-                    return whitespace + name + _template.boundAttributeSuffix + value + _template.marker;
-                });
-                if (!addedMarker) {
-                    html += _template.nodeMarker;
-                }
-            }
-            return html + this.strings[endIndex];
-        }
-    }, {
-        key: 'getTemplateElement',
-        value: function getTemplateElement() {
-            var template = document.createElement('template');
-            template.innerHTML = this.getHTML();
-            return template;
-        }
-    }]);
-
-    return TemplateResult;
-}();
-/**
- * A TemplateResult for SVG fragments.
- *
- * This class wraps HTMl in an `<svg>` tag in order to parse its contents in the
- * SVG namespace, then modifies the template to remove the `<svg>` tag so that
- * clones only container the original fragment.
- */
-
-
-var SVGTemplateResult = exports.SVGTemplateResult = function (_TemplateResult) {
-    _inherits(SVGTemplateResult, _TemplateResult);
-
-    function SVGTemplateResult() {
-        _classCallCheck(this, SVGTemplateResult);
-
-        return _possibleConstructorReturn(this, (SVGTemplateResult.__proto__ || Object.getPrototypeOf(SVGTemplateResult)).apply(this, arguments));
-    }
-
-    _createClass(SVGTemplateResult, [{
-        key: 'getHTML',
-        value: function getHTML() {
-            return '<svg>' + _get(SVGTemplateResult.prototype.__proto__ || Object.getPrototypeOf(SVGTemplateResult.prototype), 'getHTML', this).call(this) + '</svg>';
-        }
-    }, {
-        key: 'getTemplateElement',
-        value: function getTemplateElement() {
-            var template = _get(SVGTemplateResult.prototype.__proto__ || Object.getPrototypeOf(SVGTemplateResult.prototype), 'getTemplateElement', this).call(this);
-            var content = template.content;
-            var svgElement = content.firstChild;
-            content.removeChild(svgElement);
-            (0, _dom.reparentNodes)(content, svgElement.firstChild);
-            return template;
-        }
-    }]);
-
-    return SVGTemplateResult;
-}(TemplateResult);
-//# sourceMappingURL=template-result.js.map
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.templateCaches = undefined;
-exports.templateFactory = templateFactory;
-
-var _template = __webpack_require__(4);
-
-/**
- * The default TemplateFactory which caches Templates keyed on
- * result.type and result.strings.
- */
-function templateFactory(result) {
-    var templateCache = templateCaches.get(result.type);
-    if (templateCache === undefined) {
-        templateCache = {
-            stringsArray: new WeakMap(),
-            keyString: new Map()
-        };
-        templateCaches.set(result.type, templateCache);
-    }
-    var template = templateCache.stringsArray.get(result.strings);
-    if (template !== undefined) {
-        return template;
-    }
-    // If the TemplateStringsArray is new, generate a key from the strings
-    // This key is shared between all templates with identical content
-    var key = result.strings.join(_template.marker);
-    // Check if we already have a Template for this key
-    template = templateCache.keyString.get(key);
-    if (template === undefined) {
-        // If we have not seen this key before, create a new Template
-        template = new _template.Template(result, result.getTemplateElement());
-        // Cache the Template for this key
-        templateCache.keyString.set(key, template);
-    }
-    // Cache all future queries for this TemplateStringsArray
-    templateCache.stringsArray.set(result.strings, template);
-    return template;
-} /**
-   * @license
-   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-   * This code may only be used under the BSD style license found at
-   * http://polymer.github.io/LICENSE.txt
-   * The complete set of authors may be found at
-   * http://polymer.github.io/AUTHORS.txt
-   * The complete set of contributors may be found at
-   * http://polymer.github.io/CONTRIBUTORS.txt
-   * Code distributed by Google as part of the polymer project is also
-   * subject to an additional IP rights grant found at
-   * http://polymer.github.io/PATENTS.txt
-   */
-var templateCaches = exports.templateCaches = new Map();
-//# sourceMappingURL=template-factory.js.map
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * @license
- * Copyright 2016 Google Inc.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-/**
- * @template A
- */
-var MDCFoundation = function () {
-  _createClass(MDCFoundation, null, [{
-    key: "cssClasses",
-
-    /** @return enum{cssClasses} */
-    get: function get() {
-      // Classes extending MDCFoundation should implement this method to return an object which exports every
-      // CSS class the foundation class needs as a property. e.g. {ACTIVE: 'mdc-component--active'}
-      return {};
-    }
-
-    /** @return enum{strings} */
-
-  }, {
-    key: "strings",
-    get: function get() {
-      // Classes extending MDCFoundation should implement this method to return an object which exports all
-      // semantic strings as constants. e.g. {ARIA_ROLE: 'tablist'}
-      return {};
-    }
-
-    /** @return enum{numbers} */
-
-  }, {
-    key: "numbers",
-    get: function get() {
-      // Classes extending MDCFoundation should implement this method to return an object which exports all
-      // of its semantic numbers as constants. e.g. {ANIMATION_DELAY_MS: 350}
-      return {};
-    }
-
-    /** @return {!Object} */
-
-  }, {
-    key: "defaultAdapter",
-    get: function get() {
-      // Classes extending MDCFoundation may choose to implement this getter in order to provide a convenient
-      // way of viewing the necessary methods of an adapter. In the future, this could also be used for adapter
-      // validation.
-      return {};
-    }
-
-    /**
-     * @param {A=} adapter
-     */
-
-  }]);
-
-  function MDCFoundation() {
-    var adapter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, MDCFoundation);
-
-    /** @protected {!A} */
-    this.adapter_ = adapter;
-  }
-
-  _createClass(MDCFoundation, [{
-    key: "init",
-    value: function init() {
-      // Subclasses should override this method to perform initialization routines (registering events, etc.)
-    }
-  }, {
-    key: "destroy",
-    value: function destroy() {
-      // Subclasses should override this method to perform de-initialization routines (de-registering events, etc.)
-    }
-  }]);
-
-  return MDCFoundation;
-}();
-
-exports.default = MDCFoundation;
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * @license
- * Copyright 2016 Google Inc.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-/* eslint no-unused-vars: [2, {"args": "none"}] */
-
-/**
- * Adapter for MDC Ripple. Provides an interface for managing
- * - classes
- * - dom
- * - CSS variables
- * - position
- * - dimensions
- * - scroll position
- * - event handlers
- * - unbounded, active and disabled states
- *
- * Additionally, provides type information for the adapter to the Closure
- * compiler.
- *
- * Implement this adapter for your framework of choice to delegate updates to
- * the component in your framework of choice. See architecture documentation
- * for more details.
- * https://github.com/material-components/material-components-web/blob/master/docs/code/architecture.md
- *
- * @record
- */
-var MDCRippleAdapter = function () {
-  function MDCRippleAdapter() {
-    _classCallCheck(this, MDCRippleAdapter);
-  }
-
-  _createClass(MDCRippleAdapter, [{
-    key: "browserSupportsCssVars",
-
-    /** @return {boolean} */
-    value: function browserSupportsCssVars() {}
-
-    /** @return {boolean} */
-
-  }, {
-    key: "isUnbounded",
-    value: function isUnbounded() {}
-
-    /** @return {boolean} */
-
-  }, {
-    key: "isSurfaceActive",
-    value: function isSurfaceActive() {}
-
-    /** @return {boolean} */
-
-  }, {
-    key: "isSurfaceDisabled",
-    value: function isSurfaceDisabled() {}
-
-    /** @param {string} className */
-
-  }, {
-    key: "addClass",
-    value: function addClass(className) {}
-
-    /** @param {string} className */
-
-  }, {
-    key: "removeClass",
-    value: function removeClass(className) {}
-
-    /** @param {!EventTarget} target */
-
-  }, {
-    key: "containsEventTarget",
-    value: function containsEventTarget(target) {}
-
-    /**
-     * @param {string} evtType
-     * @param {!Function} handler
-     */
-
-  }, {
-    key: "registerInteractionHandler",
-    value: function registerInteractionHandler(evtType, handler) {}
-
-    /**
-     * @param {string} evtType
-     * @param {!Function} handler
-     */
-
-  }, {
-    key: "deregisterInteractionHandler",
-    value: function deregisterInteractionHandler(evtType, handler) {}
-
-    /**
-     * @param {string} evtType
-     * @param {!Function} handler
-     */
-
-  }, {
-    key: "registerDocumentInteractionHandler",
-    value: function registerDocumentInteractionHandler(evtType, handler) {}
-
-    /**
-     * @param {string} evtType
-     * @param {!Function} handler
-     */
-
-  }, {
-    key: "deregisterDocumentInteractionHandler",
-    value: function deregisterDocumentInteractionHandler(evtType, handler) {}
-
-    /**
-     * @param {!Function} handler
-     */
-
-  }, {
-    key: "registerResizeHandler",
-    value: function registerResizeHandler(handler) {}
-
-    /**
-     * @param {!Function} handler
-     */
-
-  }, {
-    key: "deregisterResizeHandler",
-    value: function deregisterResizeHandler(handler) {}
-
-    /**
-     * @param {string} varName
-     * @param {?number|string} value
-     */
-
-  }, {
-    key: "updateCssVariable",
-    value: function updateCssVariable(varName, value) {}
-
-    /** @return {!ClientRect} */
-
-  }, {
-    key: "computeBoundingRect",
-    value: function computeBoundingRect() {}
-
-    /** @return {{x: number, y: number}} */
-
-  }, {
-    key: "getWindowPageOffset",
-    value: function getWindowPageOffset() {}
-  }]);
-
-  return MDCRippleAdapter;
-}();
-
-exports.default = MDCRippleAdapter;
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/**
- * @license
- * Copyright 2016 Google Inc.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-/**
- * Stores result from supportsCssVariables to avoid redundant processing to detect CSS custom variable support.
- * @private {boolean|undefined}
- */
-var supportsCssVariables_ = void 0;
-
-/**
- * Stores result from applyPassive to avoid redundant processing to detect passive event listener support.
- * @private {boolean|undefined}
- */
-var supportsPassive_ = void 0;
-
-/**
- * @param {!Window} windowObj
- * @return {boolean}
- */
-function detectEdgePseudoVarBug(windowObj) {
-  // Detect versions of Edge with buggy var() support
-  // See: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11495448/
-  var document = windowObj.document;
-  var node = document.createElement('div');
-  node.className = 'mdc-ripple-surface--test-edge-var-bug';
-  document.body.appendChild(node);
-
-  // The bug exists if ::before style ends up propagating to the parent element.
-  // Additionally, getComputedStyle returns null in iframes with display: "none" in Firefox,
-  // but Firefox is known to support CSS custom properties correctly.
-  // See: https://bugzilla.mozilla.org/show_bug.cgi?id=548397
-  var computedStyle = windowObj.getComputedStyle(node);
-  var hasPseudoVarBug = computedStyle !== null && computedStyle.borderTopStyle === 'solid';
-  node.remove();
-  return hasPseudoVarBug;
-}
-
-/**
- * @param {!Window} windowObj
- * @param {boolean=} forceRefresh
- * @return {boolean|undefined}
- */
-
-function supportsCssVariables(windowObj) {
-  var forceRefresh = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-  var supportsCssVariables = supportsCssVariables_;
-  if (typeof supportsCssVariables_ === 'boolean' && !forceRefresh) {
-    return supportsCssVariables;
-  }
-
-  var supportsFunctionPresent = windowObj.CSS && typeof windowObj.CSS.supports === 'function';
-  if (!supportsFunctionPresent) {
-    return;
-  }
-
-  var explicitlySupportsCssVars = windowObj.CSS.supports('--css-vars', 'yes');
-  // See: https://bugs.webkit.org/show_bug.cgi?id=154669
-  // See: README section on Safari
-  var weAreFeatureDetectingSafari10plus = windowObj.CSS.supports('(--css-vars: yes)') && windowObj.CSS.supports('color', '#00000000');
-
-  if (explicitlySupportsCssVars || weAreFeatureDetectingSafari10plus) {
-    supportsCssVariables = !detectEdgePseudoVarBug(windowObj);
-  } else {
-    supportsCssVariables = false;
-  }
-
-  if (!forceRefresh) {
-    supportsCssVariables_ = supportsCssVariables;
-  }
-  return supportsCssVariables;
-}
-
-//
-/**
- * Determine whether the current browser supports passive event listeners, and if so, use them.
- * @param {!Window=} globalObj
- * @param {boolean=} forceRefresh
- * @return {boolean|!EventListenerOptions}
- */
-function applyPassive() {
-  var globalObj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window;
-  var forceRefresh = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-  if (supportsPassive_ === undefined || forceRefresh) {
-    var isSupported = false;
-    try {
-      globalObj.document.addEventListener('test', null, { get passive() {
-          isSupported = true;
-          return isSupported;
-        } });
-    } catch (e) {}
-
-    supportsPassive_ = isSupported;
-  }
-
-  return supportsPassive_ ? /** @type {!EventListenerOptions} */{ passive: true } : false;
-}
-
-/**
- * @param {!Object} HTMLElementPrototype
- * @return {string}
- */
-function getMatchesProperty(HTMLElementPrototype) {
-  /**
-   * Order is important because we return the first existing method we find.
-   * Do not change the order of the items in the below array.
-   */
-  var matchesMethods = ['matches', 'webkitMatchesSelector', 'msMatchesSelector'];
-  var method = 'matches';
-  for (var i = 0; i < matchesMethods.length; i++) {
-    var matchesMethod = matchesMethods[i];
-    if (matchesMethod in HTMLElementPrototype) {
-      method = matchesMethod;
-      break;
-    }
-  }
-
-  return method;
-}
-
-/**
- * @param {!Event} ev
- * @param {{x: number, y: number}} pageOffset
- * @param {!ClientRect} clientRect
- * @return {{x: number, y: number}}
- */
-function getNormalizedEventCoords(ev, pageOffset, clientRect) {
-  var x = pageOffset.x,
-      y = pageOffset.y;
-
-  var documentX = x + clientRect.left;
-  var documentY = y + clientRect.top;
-
-  var normalizedX = void 0;
-  var normalizedY = void 0;
-  // Determine touch point relative to the ripple container.
-  if (ev.type === 'touchstart') {
-    ev = /** @type {!TouchEvent} */ev;
-    normalizedX = ev.changedTouches[0].pageX - documentX;
-    normalizedY = ev.changedTouches[0].pageY - documentY;
-  } else {
-    ev = /** @type {!MouseEvent} */ev;
-    normalizedX = ev.pageX - documentX;
-    normalizedY = ev.pageY - documentY;
-  }
-
-  return { x: normalizedX, y: normalizedY };
-}
-
-exports.supportsCssVariables = supportsCssVariables;
-exports.applyPassive = applyPassive;
-exports.getMatchesProperty = getMatchesProperty;
-exports.getNormalizedEventCoords = getNormalizedEventCoords;
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Parses an URI
- *
- * @author Steven Levithan <stevenlevithan.com> (MIT license)
- * @api private
- */
-
-var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
-
-var parts = ['source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'];
-
-module.exports = function parseuri(str) {
-    var src = str,
-        b = str.indexOf('['),
-        e = str.indexOf(']');
-
-    if (b != -1 && e != -1) {
-        str = str.substring(0, b) + str.substring(b, e).replace(/:/g, ';') + str.substring(e, str.length);
-    }
-
-    var m = re.exec(str || ''),
-        uri = {},
-        i = 14;
-
-    while (i--) {
-        uri[parts[i]] = m[i] || '';
-    }
-
-    if (b != -1 && e != -1) {
-        uri.source = src;
-        uri.host = uri.host.substring(1, uri.host.length - 1).replace(/;/g, ':');
-        uri.authority = uri.authority.replace('[', '').replace(']', '').replace(/;/g, ':');
-        uri.ipv6uri = true;
-    }
-
-    return uri;
-};
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
-
-module.exports = isBuf;
-
-var withNativeBuffer = typeof Buffer === 'function' && typeof Buffer.isBuffer === 'function';
-var withNativeArrayBuffer = typeof ArrayBuffer === 'function';
-
-var isView = function isView(obj) {
-  return typeof ArrayBuffer.isView === 'function' ? ArrayBuffer.isView(obj) : obj.buffer instanceof ArrayBuffer;
-};
-
-/**
- * Returns true if obj is a buffer or an arraybuffer.
- *
- * @api private
- */
-
-function isBuf(obj) {
-  return withNativeBuffer && Buffer.isBuffer(obj) || withNativeArrayBuffer && (obj instanceof ArrayBuffer || isView(obj));
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20).Buffer))
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var g;
-
-// This works in non-strict mode
-g = function () {
-	return this;
-}();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1, eval)("this");
-} catch (e) {
-	// This works if the window reference is available
-	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-/**
- * Module dependencies.
- */
-
-var eio = __webpack_require__(67);
-var Socket = __webpack_require__(40);
-var Emitter = __webpack_require__(1);
-var parser = __webpack_require__(18);
-var on = __webpack_require__(41);
-var bind = __webpack_require__(42);
-var debug = __webpack_require__(6)('socket.io-client:manager');
-var indexOf = __webpack_require__(39);
-var Backoff = __webpack_require__(82);
-
-/**
- * IE6+ hasOwnProperty
- */
-
-var has = Object.prototype.hasOwnProperty;
-
-/**
- * Module exports
- */
-
-module.exports = Manager;
-
-/**
- * `Manager` constructor.
- *
- * @param {String} engine instance or engine uri/opts
- * @param {Object} options
- * @api public
- */
-
-function Manager(uri, opts) {
-  if (!(this instanceof Manager)) return new Manager(uri, opts);
-  if (uri && 'object' === (typeof uri === 'undefined' ? 'undefined' : _typeof(uri))) {
-    opts = uri;
-    uri = undefined;
-  }
-  opts = opts || {};
-
-  opts.path = opts.path || '/socket.io';
-  this.nsps = {};
-  this.subs = [];
-  this.opts = opts;
-  this.reconnection(opts.reconnection !== false);
-  this.reconnectionAttempts(opts.reconnectionAttempts || Infinity);
-  this.reconnectionDelay(opts.reconnectionDelay || 1000);
-  this.reconnectionDelayMax(opts.reconnectionDelayMax || 5000);
-  this.randomizationFactor(opts.randomizationFactor || 0.5);
-  this.backoff = new Backoff({
-    min: this.reconnectionDelay(),
-    max: this.reconnectionDelayMax(),
-    jitter: this.randomizationFactor()
-  });
-  this.timeout(null == opts.timeout ? 20000 : opts.timeout);
-  this.readyState = 'closed';
-  this.uri = uri;
-  this.connecting = [];
-  this.lastPing = null;
-  this.encoding = false;
-  this.packetBuffer = [];
-  var _parser = opts.parser || parser;
-  this.encoder = new _parser.Encoder();
-  this.decoder = new _parser.Decoder();
-  this.autoConnect = opts.autoConnect !== false;
-  if (this.autoConnect) this.open();
-}
-
-/**
- * Propagate given event to sockets and emit on `this`
- *
- * @api private
- */
-
-Manager.prototype.emitAll = function () {
-  this.emit.apply(this, arguments);
-  for (var nsp in this.nsps) {
-    if (has.call(this.nsps, nsp)) {
-      this.nsps[nsp].emit.apply(this.nsps[nsp], arguments);
-    }
-  }
-};
-
-/**
- * Update `socket.id` of all sockets
- *
- * @api private
- */
-
-Manager.prototype.updateSocketIds = function () {
-  for (var nsp in this.nsps) {
-    if (has.call(this.nsps, nsp)) {
-      this.nsps[nsp].id = this.generateId(nsp);
-    }
-  }
-};
-
-/**
- * generate `socket.id` for the given `nsp`
- *
- * @param {String} nsp
- * @return {String}
- * @api private
- */
-
-Manager.prototype.generateId = function (nsp) {
-  return (nsp === '/' ? '' : nsp + '#') + this.engine.id;
-};
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Manager.prototype);
-
-/**
- * Sets the `reconnection` config.
- *
- * @param {Boolean} true/false if it should automatically reconnect
- * @return {Manager} self or value
- * @api public
- */
-
-Manager.prototype.reconnection = function (v) {
-  if (!arguments.length) return this._reconnection;
-  this._reconnection = !!v;
-  return this;
-};
-
-/**
- * Sets the reconnection attempts config.
- *
- * @param {Number} max reconnection attempts before giving up
- * @return {Manager} self or value
- * @api public
- */
-
-Manager.prototype.reconnectionAttempts = function (v) {
-  if (!arguments.length) return this._reconnectionAttempts;
-  this._reconnectionAttempts = v;
-  return this;
-};
-
-/**
- * Sets the delay between reconnections.
- *
- * @param {Number} delay
- * @return {Manager} self or value
- * @api public
- */
-
-Manager.prototype.reconnectionDelay = function (v) {
-  if (!arguments.length) return this._reconnectionDelay;
-  this._reconnectionDelay = v;
-  this.backoff && this.backoff.setMin(v);
-  return this;
-};
-
-Manager.prototype.randomizationFactor = function (v) {
-  if (!arguments.length) return this._randomizationFactor;
-  this._randomizationFactor = v;
-  this.backoff && this.backoff.setJitter(v);
-  return this;
-};
-
-/**
- * Sets the maximum delay between reconnections.
- *
- * @param {Number} delay
- * @return {Manager} self or value
- * @api public
- */
-
-Manager.prototype.reconnectionDelayMax = function (v) {
-  if (!arguments.length) return this._reconnectionDelayMax;
-  this._reconnectionDelayMax = v;
-  this.backoff && this.backoff.setMax(v);
-  return this;
-};
-
-/**
- * Sets the connection timeout. `false` to disable
- *
- * @return {Manager} self or value
- * @api public
- */
-
-Manager.prototype.timeout = function (v) {
-  if (!arguments.length) return this._timeout;
-  this._timeout = v;
-  return this;
-};
-
-/**
- * Starts trying to reconnect if reconnection is enabled and we have not
- * started reconnecting yet
- *
- * @api private
- */
-
-Manager.prototype.maybeReconnectOnOpen = function () {
-  // Only try to reconnect if it's the first time we're connecting
-  if (!this.reconnecting && this._reconnection && this.backoff.attempts === 0) {
-    // keeps reconnection from firing twice for the same reconnection loop
-    this.reconnect();
-  }
-};
-
-/**
- * Sets the current transport `socket`.
- *
- * @param {Function} optional, callback
- * @return {Manager} self
- * @api public
- */
-
-Manager.prototype.open = Manager.prototype.connect = function (fn, opts) {
-  debug('readyState %s', this.readyState);
-  if (~this.readyState.indexOf('open')) return this;
-
-  debug('opening %s', this.uri);
-  this.engine = eio(this.uri, this.opts);
-  var socket = this.engine;
-  var self = this;
-  this.readyState = 'opening';
-  this.skipReconnect = false;
-
-  // emit `open`
-  var openSub = on(socket, 'open', function () {
-    self.onopen();
-    fn && fn();
-  });
-
-  // emit `connect_error`
-  var errorSub = on(socket, 'error', function (data) {
-    debug('connect_error');
-    self.cleanup();
-    self.readyState = 'closed';
-    self.emitAll('connect_error', data);
-    if (fn) {
-      var err = new Error('Connection error');
-      err.data = data;
-      fn(err);
-    } else {
-      // Only do this if there is no fn to handle the error
-      self.maybeReconnectOnOpen();
-    }
-  });
-
-  // emit `connect_timeout`
-  if (false !== this._timeout) {
-    var timeout = this._timeout;
-    debug('connect attempt will timeout after %d', timeout);
-
-    // set timer
-    var timer = setTimeout(function () {
-      debug('connect attempt timed out after %d', timeout);
-      openSub.destroy();
-      socket.close();
-      socket.emit('error', 'timeout');
-      self.emitAll('connect_timeout', timeout);
-    }, timeout);
-
-    this.subs.push({
-      destroy: function destroy() {
-        clearTimeout(timer);
-      }
-    });
-  }
-
-  this.subs.push(openSub);
-  this.subs.push(errorSub);
-
-  return this;
-};
-
-/**
- * Called upon transport open.
- *
- * @api private
- */
-
-Manager.prototype.onopen = function () {
-  debug('open');
-
-  // clear old subs
-  this.cleanup();
-
-  // mark as open
-  this.readyState = 'open';
-  this.emit('open');
-
-  // add new subs
-  var socket = this.engine;
-  this.subs.push(on(socket, 'data', bind(this, 'ondata')));
-  this.subs.push(on(socket, 'ping', bind(this, 'onping')));
-  this.subs.push(on(socket, 'pong', bind(this, 'onpong')));
-  this.subs.push(on(socket, 'error', bind(this, 'onerror')));
-  this.subs.push(on(socket, 'close', bind(this, 'onclose')));
-  this.subs.push(on(this.decoder, 'decoded', bind(this, 'ondecoded')));
-};
-
-/**
- * Called upon a ping.
- *
- * @api private
- */
-
-Manager.prototype.onping = function () {
-  this.lastPing = new Date();
-  this.emitAll('ping');
-};
-
-/**
- * Called upon a packet.
- *
- * @api private
- */
-
-Manager.prototype.onpong = function () {
-  this.emitAll('pong', new Date() - this.lastPing);
-};
-
-/**
- * Called with data.
- *
- * @api private
- */
-
-Manager.prototype.ondata = function (data) {
-  this.decoder.add(data);
-};
-
-/**
- * Called when parser fully decodes a packet.
- *
- * @api private
- */
-
-Manager.prototype.ondecoded = function (packet) {
-  this.emit('packet', packet);
-};
-
-/**
- * Called upon socket error.
- *
- * @api private
- */
-
-Manager.prototype.onerror = function (err) {
-  debug('error', err);
-  this.emitAll('error', err);
-};
-
-/**
- * Creates a new socket for the given `nsp`.
- *
- * @return {Socket}
- * @api public
- */
-
-Manager.prototype.socket = function (nsp, opts) {
-  var socket = this.nsps[nsp];
-  if (!socket) {
-    socket = new Socket(this, nsp, opts);
-    this.nsps[nsp] = socket;
-    var self = this;
-    socket.on('connecting', onConnecting);
-    socket.on('connect', function () {
-      socket.id = self.generateId(nsp);
-    });
-
-    if (this.autoConnect) {
-      // manually call here since connecting event is fired before listening
-      onConnecting();
-    }
-  }
-
-  function onConnecting() {
-    if (!~indexOf(self.connecting, socket)) {
-      self.connecting.push(socket);
-    }
-  }
-
-  return socket;
-};
-
-/**
- * Called upon a socket close.
- *
- * @param {Socket} socket
- */
-
-Manager.prototype.destroy = function (socket) {
-  var index = indexOf(this.connecting, socket);
-  if (~index) this.connecting.splice(index, 1);
-  if (this.connecting.length) return;
-
-  this.close();
-};
-
-/**
- * Writes a packet.
- *
- * @param {Object} packet
- * @api private
- */
-
-Manager.prototype.packet = function (packet) {
-  debug('writing packet %j', packet);
-  var self = this;
-  if (packet.query && packet.type === 0) packet.nsp += '?' + packet.query;
-
-  if (!self.encoding) {
-    // encode, then write to engine with result
-    self.encoding = true;
-    this.encoder.encode(packet, function (encodedPackets) {
-      for (var i = 0; i < encodedPackets.length; i++) {
-        self.engine.write(encodedPackets[i], packet.options);
-      }
-      self.encoding = false;
-      self.processPacketQueue();
-    });
-  } else {
-    // add packet to the queue
-    self.packetBuffer.push(packet);
-  }
-};
-
-/**
- * If packet buffer is non-empty, begins encoding the
- * next packet in line.
- *
- * @api private
- */
-
-Manager.prototype.processPacketQueue = function () {
-  if (this.packetBuffer.length > 0 && !this.encoding) {
-    var pack = this.packetBuffer.shift();
-    this.packet(pack);
-  }
-};
-
-/**
- * Clean up transport subscriptions and packet buffer.
- *
- * @api private
- */
-
-Manager.prototype.cleanup = function () {
-  debug('cleanup');
-
-  var subsLength = this.subs.length;
-  for (var i = 0; i < subsLength; i++) {
-    var sub = this.subs.shift();
-    sub.destroy();
-  }
-
-  this.packetBuffer = [];
-  this.encoding = false;
-  this.lastPing = null;
-
-  this.decoder.destroy();
-};
-
-/**
- * Close the current socket.
- *
- * @api private
- */
-
-Manager.prototype.close = Manager.prototype.disconnect = function () {
-  debug('disconnect');
-  this.skipReconnect = true;
-  this.reconnecting = false;
-  if ('opening' === this.readyState) {
-    // `onclose` will not fire because
-    // an open event never happened
-    this.cleanup();
-  }
-  this.backoff.reset();
-  this.readyState = 'closed';
-  if (this.engine) this.engine.close();
-};
-
-/**
- * Called upon engine close.
- *
- * @api private
- */
-
-Manager.prototype.onclose = function (reason) {
-  debug('onclose');
-
-  this.cleanup();
-  this.backoff.reset();
-  this.readyState = 'closed';
-  this.emit('close', reason);
-
-  if (this._reconnection && !this.skipReconnect) {
-    this.reconnect();
-  }
-};
-
-/**
- * Attempt a reconnection.
- *
- * @api private
- */
-
-Manager.prototype.reconnect = function () {
-  if (this.reconnecting || this.skipReconnect) return this;
-
-  var self = this;
-
-  if (this.backoff.attempts >= this._reconnectionAttempts) {
-    debug('reconnect failed');
-    this.backoff.reset();
-    this.emitAll('reconnect_failed');
-    this.reconnecting = false;
-  } else {
-    var delay = this.backoff.duration();
-    debug('will wait %dms before reconnect attempt', delay);
-
-    this.reconnecting = true;
-    var timer = setTimeout(function () {
-      if (self.skipReconnect) return;
-
-      debug('attempting reconnect');
-      self.emitAll('reconnect_attempt', self.backoff.attempts);
-      self.emitAll('reconnecting', self.backoff.attempts);
-
-      // check again for the case socket closed in above events
-      if (self.skipReconnect) return;
-
-      self.open(function (err) {
-        if (err) {
-          debug('reconnect attempt error');
-          self.reconnecting = false;
-          self.reconnect();
-          self.emitAll('reconnect_error', err.data);
-        } else {
-          debug('reconnect success');
-          self.onreconnect();
-        }
-      });
-    }, delay);
-
-    this.subs.push({
-      destroy: function destroy() {
-        clearTimeout(timer);
-      }
-    });
-  }
-};
-
-/**
- * Called upon successful reconnect.
- *
- * @api private
- */
-
-Manager.prototype.onreconnect = function () {
-  var attempt = this.backoff.attempts;
-  this.reconnecting = false;
-  this.backoff.reset();
-  this.updateSocketIds();
-  this.emitAll('reconnect', attempt);
-};
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Module dependencies
- */
-
-var XMLHttpRequest = __webpack_require__(21);
-var XHR = __webpack_require__(70);
-var JSONP = __webpack_require__(78);
-var websocket = __webpack_require__(79);
-
-/**
- * Export transports.
- */
-
-exports.polling = polling;
-exports.websocket = websocket;
-
-/**
- * Polling transport polymorphic constructor.
- * Decides on xhr vs jsonp based on feature detection.
- *
- * @api private
- */
-
-function polling(opts) {
-  var xhr;
-  var xd = false;
-  var xs = false;
-  var jsonp = false !== opts.jsonp;
-
-  if (typeof location !== 'undefined') {
-    var isSSL = 'https:' === location.protocol;
-    var port = location.port;
-
-    // some user agents have empty `location.port`
-    if (!port) {
-      port = isSSL ? 443 : 80;
-    }
-
-    xd = opts.hostname !== location.hostname || port !== opts.port;
-    xs = opts.secure !== isSSL;
-  }
-
-  opts.xdomain = xd;
-  opts.xscheme = xs;
-  xhr = new XMLHttpRequest(opts);
-
-  if ('open' in xhr && !opts.forceJSONP) {
-    return new XHR(opts);
-  } else {
-    if (!jsonp) throw new Error('JSONP disabled');
-    return new JSONP(opts);
-  }
-}
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Module dependencies.
- */
-
-var Transport = __webpack_require__(22);
-var parseqs = __webpack_require__(7);
-var parser = __webpack_require__(2);
-var inherit = __webpack_require__(8);
-var yeast = __webpack_require__(38);
-var debug = __webpack_require__(9)('engine.io-client:polling');
-
-/**
- * Module exports.
- */
-
-module.exports = Polling;
-
-/**
- * Is XHR2 supported?
- */
-
-var hasXHR2 = function () {
-  var XMLHttpRequest = __webpack_require__(21);
-  var xhr = new XMLHttpRequest({ xdomain: false });
-  return null != xhr.responseType;
-}();
-
-/**
- * Polling interface.
- *
- * @param {Object} opts
- * @api private
- */
-
-function Polling(opts) {
-  var forceBase64 = opts && opts.forceBase64;
-  if (!hasXHR2 || forceBase64) {
-    this.supportsBinary = false;
-  }
-  Transport.call(this, opts);
-}
-
-/**
- * Inherits from Transport.
- */
-
-inherit(Polling, Transport);
-
-/**
- * Transport name.
- */
-
-Polling.prototype.name = 'polling';
-
-/**
- * Opens the socket (triggers polling). We write a PING message to determine
- * when the transport is open.
- *
- * @api private
- */
-
-Polling.prototype.doOpen = function () {
-  this.poll();
-};
-
-/**
- * Pauses polling.
- *
- * @param {Function} callback upon buffers are flushed and transport is paused
- * @api private
- */
-
-Polling.prototype.pause = function (onPause) {
-  var self = this;
-
-  this.readyState = 'pausing';
-
-  function pause() {
-    debug('paused');
-    self.readyState = 'paused';
-    onPause();
-  }
-
-  if (this.polling || !this.writable) {
-    var total = 0;
-
-    if (this.polling) {
-      debug('we are currently polling - waiting to pause');
-      total++;
-      this.once('pollComplete', function () {
-        debug('pre-pause polling complete');
-        --total || pause();
-      });
-    }
-
-    if (!this.writable) {
-      debug('we are currently writing - waiting to pause');
-      total++;
-      this.once('drain', function () {
-        debug('pre-pause writing complete');
-        --total || pause();
-      });
-    }
-  } else {
-    pause();
-  }
-};
-
-/**
- * Starts polling cycle.
- *
- * @api public
- */
-
-Polling.prototype.poll = function () {
-  debug('polling');
-  this.polling = true;
-  this.doPoll();
-  this.emit('poll');
-};
-
-/**
- * Overloads onData to detect payloads.
- *
- * @api private
- */
-
-Polling.prototype.onData = function (data) {
-  var self = this;
-  debug('polling got data %s', data);
-  var callback = function callback(packet, index, total) {
-    // if its the first message we consider the transport open
-    if ('opening' === self.readyState) {
-      self.onOpen();
-    }
-
-    // if its a close packet, we close the ongoing requests
-    if ('close' === packet.type) {
-      self.onClose();
-      return false;
-    }
-
-    // otherwise bypass onData and handle the message
-    self.onPacket(packet);
-  };
-
-  // decode payload
-  parser.decodePayload(data, this.socket.binaryType, callback);
-
-  // if an event did not trigger closing
-  if ('closed' !== this.readyState) {
-    // if we got data we're not polling
-    this.polling = false;
-    this.emit('pollComplete');
-
-    if ('open' === this.readyState) {
-      this.poll();
-    } else {
-      debug('ignoring poll - transport state "%s"', this.readyState);
-    }
-  }
-};
-
-/**
- * For polling, send a close packet.
- *
- * @api private
- */
-
-Polling.prototype.doClose = function () {
-  var self = this;
-
-  function close() {
-    debug('writing close packet');
-    self.write([{ type: 'close' }]);
-  }
-
-  if ('open' === this.readyState) {
-    debug('transport open - closing');
-    close();
-  } else {
-    // in case we're trying to close while
-    // handshaking is in progress (GH-164)
-    debug('transport not open - deferring close');
-    this.once('open', close);
-  }
-};
-
-/**
- * Writes a packets payload.
- *
- * @param {Array} data packets
- * @param {Function} drain callback
- * @api private
- */
-
-Polling.prototype.write = function (packets) {
-  var self = this;
-  this.writable = false;
-  var callbackfn = function callbackfn() {
-    self.writable = true;
-    self.emit('drain');
-  };
-
-  parser.encodePayload(packets, this.supportsBinary, function (data) {
-    self.doWrite(data, callbackfn);
-  });
-};
-
-/**
- * Generates uri for connection.
- *
- * @api private
- */
-
-Polling.prototype.uri = function () {
-  var query = this.query || {};
-  var schema = this.secure ? 'https' : 'http';
-  var port = '';
-
-  // cache busting is forced
-  if (false !== this.timestampRequests) {
-    query[this.timestampParam] = yeast();
-  }
-
-  if (!this.supportsBinary && !query.sid) {
-    query.b64 = 1;
-  }
-
-  query = parseqs.encode(query);
-
-  // avoid port if default for schema
-  if (this.port && ('https' === schema && Number(this.port) !== 443 || 'http' === schema && Number(this.port) !== 80)) {
-    port = ':' + this.port;
-  }
-
-  // prepend ? to query
-  if (query.length) {
-    query = '?' + query;
-  }
-
-  var ipv6 = this.hostname.indexOf(':') !== -1;
-  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
-};
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-/* global Blob File */
-
-/*
- * Module requirements.
- */
-
-var isArray = __webpack_require__(19);
-
-var toString = Object.prototype.toString;
-var withNativeBlob = typeof Blob === 'function' || typeof Blob !== 'undefined' && toString.call(Blob) === '[object BlobConstructor]';
-var withNativeFile = typeof File === 'function' || typeof File !== 'undefined' && toString.call(File) === '[object FileConstructor]';
-
-/**
- * Module exports.
- */
-
-module.exports = hasBinary;
-
-/**
- * Checks for binary data.
- *
- * Supports Buffer, ArrayBuffer, Blob and File.
- *
- * @param {Object} anything
- * @api public
- */
-
-function hasBinary(obj) {
-  if (!obj || (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) !== 'object') {
-    return false;
-  }
-
-  if (isArray(obj)) {
-    for (var i = 0, l = obj.length; i < l; i++) {
-      if (hasBinary(obj[i])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  if (typeof Buffer === 'function' && Buffer.isBuffer && Buffer.isBuffer(obj) || typeof ArrayBuffer === 'function' && obj instanceof ArrayBuffer || withNativeBlob && obj instanceof Blob || withNativeFile && obj instanceof File) {
-    return true;
-  }
-
-  // see: https://github.com/Automattic/has-binary/pull/4
-  if (obj.toJSON && typeof obj.toJSON === 'function' && arguments.length === 1) {
-    return hasBinary(obj.toJSON(), true);
-  }
-
-  for (var key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key) && hasBinary(obj[key])) {
-      return true;
-    }
-  }
-
-  return false;
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20).Buffer))
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split(''),
-    length = 64,
-    map = {},
-    seed = 0,
-    i = 0,
-    prev;
-
-/**
- * Return a string representing the specified number.
- *
- * @param {Number} num The number to convert.
- * @returns {String} The string representation of the number.
- * @api public
- */
-function encode(num) {
-  var encoded = '';
-
-  do {
-    encoded = alphabet[num % length] + encoded;
-    num = Math.floor(num / length);
-  } while (num > 0);
-
-  return encoded;
-}
-
-/**
- * Return the integer value specified by the given string.
- *
- * @param {String} str The string to convert.
- * @returns {Number} The integer value represented by the string.
- * @api public
- */
-function decode(str) {
-  var decoded = 0;
-
-  for (i = 0; i < str.length; i++) {
-    decoded = decoded * length + map[str.charAt(i)];
-  }
-
-  return decoded;
-}
-
-/**
- * Yeast: A tiny growing id generator.
- *
- * @returns {String} A unique id.
- * @api public
- */
-function yeast() {
-  var now = encode(+new Date());
-
-  if (now !== prev) return seed = 0, prev = now;
-  return now + '.' + encode(seed++);
-}
-
-//
-// Map each character to its index.
-//
-for (; i < length; i++) {
-  map[alphabet[i]] = i;
-} //
-// Expose the `yeast`, `encode` and `decode` functions.
-//
-yeast.encode = encode;
-yeast.decode = decode;
-module.exports = yeast;
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var indexOf = [].indexOf;
-
-module.exports = function (arr, obj) {
-  if (indexOf) return arr.indexOf(obj);
-  for (var i = 0; i < arr.length; ++i) {
-    if (arr[i] === obj) return i;
-  }
-  return -1;
-};
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-/**
- * Module dependencies.
- */
-
-var parser = __webpack_require__(18);
-var Emitter = __webpack_require__(1);
-var toArray = __webpack_require__(81);
-var on = __webpack_require__(41);
-var bind = __webpack_require__(42);
-var debug = __webpack_require__(6)('socket.io-client:socket');
-var parseqs = __webpack_require__(7);
-var hasBin = __webpack_require__(37);
-
-/**
- * Module exports.
- */
-
-module.exports = exports = Socket;
-
-/**
- * Internal events (blacklisted).
- * These events can't be emitted by the user.
- *
- * @api private
- */
-
-var events = {
-  connect: 1,
-  connect_error: 1,
-  connect_timeout: 1,
-  connecting: 1,
-  disconnect: 1,
-  error: 1,
-  reconnect: 1,
-  reconnect_attempt: 1,
-  reconnect_failed: 1,
-  reconnect_error: 1,
-  reconnecting: 1,
-  ping: 1,
-  pong: 1
-};
-
-/**
- * Shortcut to `Emitter#emit`.
- */
-
-var emit = Emitter.prototype.emit;
-
-/**
- * `Socket` constructor.
- *
- * @api public
- */
-
-function Socket(io, nsp, opts) {
-  this.io = io;
-  this.nsp = nsp;
-  this.json = this; // compat
-  this.ids = 0;
-  this.acks = {};
-  this.receiveBuffer = [];
-  this.sendBuffer = [];
-  this.connected = false;
-  this.disconnected = true;
-  this.flags = {};
-  if (opts && opts.query) {
-    this.query = opts.query;
-  }
-  if (this.io.autoConnect) this.open();
-}
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Socket.prototype);
-
-/**
- * Subscribe to open, close and packet events
- *
- * @api private
- */
-
-Socket.prototype.subEvents = function () {
-  if (this.subs) return;
-
-  var io = this.io;
-  this.subs = [on(io, 'open', bind(this, 'onopen')), on(io, 'packet', bind(this, 'onpacket')), on(io, 'close', bind(this, 'onclose'))];
-};
-
-/**
- * "Opens" the socket.
- *
- * @api public
- */
-
-Socket.prototype.open = Socket.prototype.connect = function () {
-  if (this.connected) return this;
-
-  this.subEvents();
-  this.io.open(); // ensure open
-  if ('open' === this.io.readyState) this.onopen();
-  this.emit('connecting');
-  return this;
-};
-
-/**
- * Sends a `message` event.
- *
- * @return {Socket} self
- * @api public
- */
-
-Socket.prototype.send = function () {
-  var args = toArray(arguments);
-  args.unshift('message');
-  this.emit.apply(this, args);
-  return this;
-};
-
-/**
- * Override `emit`.
- * If the event is in `events`, it's emitted normally.
- *
- * @param {String} event name
- * @return {Socket} self
- * @api public
- */
-
-Socket.prototype.emit = function (ev) {
-  if (events.hasOwnProperty(ev)) {
-    emit.apply(this, arguments);
-    return this;
-  }
-
-  var args = toArray(arguments);
-  var packet = {
-    type: (this.flags.binary !== undefined ? this.flags.binary : hasBin(args)) ? parser.BINARY_EVENT : parser.EVENT,
-    data: args
-  };
-
-  packet.options = {};
-  packet.options.compress = !this.flags || false !== this.flags.compress;
-
-  // event ack callback
-  if ('function' === typeof args[args.length - 1]) {
-    debug('emitting packet with ack id %d', this.ids);
-    this.acks[this.ids] = args.pop();
-    packet.id = this.ids++;
-  }
-
-  if (this.connected) {
-    this.packet(packet);
-  } else {
-    this.sendBuffer.push(packet);
-  }
-
-  this.flags = {};
-
-  return this;
-};
-
-/**
- * Sends a packet.
- *
- * @param {Object} packet
- * @api private
- */
-
-Socket.prototype.packet = function (packet) {
-  packet.nsp = this.nsp;
-  this.io.packet(packet);
-};
-
-/**
- * Called upon engine `open`.
- *
- * @api private
- */
-
-Socket.prototype.onopen = function () {
-  debug('transport is open - connecting');
-
-  // write connect packet if necessary
-  if ('/' !== this.nsp) {
-    if (this.query) {
-      var query = _typeof(this.query) === 'object' ? parseqs.encode(this.query) : this.query;
-      debug('sending connect packet with query %s', query);
-      this.packet({ type: parser.CONNECT, query: query });
-    } else {
-      this.packet({ type: parser.CONNECT });
-    }
-  }
-};
-
-/**
- * Called upon engine `close`.
- *
- * @param {String} reason
- * @api private
- */
-
-Socket.prototype.onclose = function (reason) {
-  debug('close (%s)', reason);
-  this.connected = false;
-  this.disconnected = true;
-  delete this.id;
-  this.emit('disconnect', reason);
-};
-
-/**
- * Called with socket packet.
- *
- * @param {Object} packet
- * @api private
- */
-
-Socket.prototype.onpacket = function (packet) {
-  var sameNamespace = packet.nsp === this.nsp;
-  var rootNamespaceError = packet.type === parser.ERROR && packet.nsp === '/';
-
-  if (!sameNamespace && !rootNamespaceError) return;
-
-  switch (packet.type) {
-    case parser.CONNECT:
-      this.onconnect();
-      break;
-
-    case parser.EVENT:
-      this.onevent(packet);
-      break;
-
-    case parser.BINARY_EVENT:
-      this.onevent(packet);
-      break;
-
-    case parser.ACK:
-      this.onack(packet);
-      break;
-
-    case parser.BINARY_ACK:
-      this.onack(packet);
-      break;
-
-    case parser.DISCONNECT:
-      this.ondisconnect();
-      break;
-
-    case parser.ERROR:
-      this.emit('error', packet.data);
-      break;
-  }
-};
-
-/**
- * Called upon a server event.
- *
- * @param {Object} packet
- * @api private
- */
-
-Socket.prototype.onevent = function (packet) {
-  var args = packet.data || [];
-  debug('emitting event %j', args);
-
-  if (null != packet.id) {
-    debug('attaching ack callback to event');
-    args.push(this.ack(packet.id));
-  }
-
-  if (this.connected) {
-    emit.apply(this, args);
-  } else {
-    this.receiveBuffer.push(args);
-  }
-};
-
-/**
- * Produces an ack callback to emit with an event.
- *
- * @api private
- */
-
-Socket.prototype.ack = function (id) {
-  var self = this;
-  var sent = false;
-  return function () {
-    // prevent double callbacks
-    if (sent) return;
-    sent = true;
-    var args = toArray(arguments);
-    debug('sending ack %j', args);
-
-    self.packet({
-      type: hasBin(args) ? parser.BINARY_ACK : parser.ACK,
-      id: id,
-      data: args
-    });
-  };
-};
-
-/**
- * Called upon a server acknowlegement.
- *
- * @param {Object} packet
- * @api private
- */
-
-Socket.prototype.onack = function (packet) {
-  var ack = this.acks[packet.id];
-  if ('function' === typeof ack) {
-    debug('calling ack %s with %j', packet.id, packet.data);
-    ack.apply(this, packet.data);
-    delete this.acks[packet.id];
-  } else {
-    debug('bad ack %s', packet.id);
-  }
-};
-
-/**
- * Called upon server connect.
- *
- * @api private
- */
-
-Socket.prototype.onconnect = function () {
-  this.connected = true;
-  this.disconnected = false;
-  this.emit('connect');
-  this.emitBuffered();
-};
-
-/**
- * Emit buffered events (received and emitted).
- *
- * @api private
- */
-
-Socket.prototype.emitBuffered = function () {
-  var i;
-  for (i = 0; i < this.receiveBuffer.length; i++) {
-    emit.apply(this, this.receiveBuffer[i]);
-  }
-  this.receiveBuffer = [];
-
-  for (i = 0; i < this.sendBuffer.length; i++) {
-    this.packet(this.sendBuffer[i]);
-  }
-  this.sendBuffer = [];
-};
-
-/**
- * Called upon server disconnect.
- *
- * @api private
- */
-
-Socket.prototype.ondisconnect = function () {
-  debug('server disconnect (%s)', this.nsp);
-  this.destroy();
-  this.onclose('io server disconnect');
-};
-
-/**
- * Called upon forced client/server side disconnections,
- * this method ensures the manager stops tracking us and
- * that reconnections don't get triggered for this.
- *
- * @api private.
- */
-
-Socket.prototype.destroy = function () {
-  if (this.subs) {
-    // clean subscriptions to avoid reconnections
-    for (var i = 0; i < this.subs.length; i++) {
-      this.subs[i].destroy();
-    }
-    this.subs = null;
-  }
-
-  this.io.destroy(this);
-};
-
-/**
- * Disconnects the socket manually.
- *
- * @return {Socket} self
- * @api public
- */
-
-Socket.prototype.close = Socket.prototype.disconnect = function () {
-  if (this.connected) {
-    debug('performing disconnect (%s)', this.nsp);
-    this.packet({ type: parser.DISCONNECT });
-  }
-
-  // remove socket from pool
-  this.destroy();
-
-  if (this.connected) {
-    // fire events
-    this.onclose('io client disconnect');
-  }
-  return this;
-};
-
-/**
- * Sets the compress flag.
- *
- * @param {Boolean} if `true`, compresses the sending data
- * @return {Socket} self
- * @api public
- */
-
-Socket.prototype.compress = function (compress) {
-  this.flags.compress = compress;
-  return this;
-};
-
-/**
- * Sets the binary flag
- *
- * @param {Boolean} whether the emitted data contains binary
- * @return {Socket} self
- * @api public
- */
-
-Socket.prototype.binary = function (binary) {
-  this.flags.binary = binary;
-  return this;
-};
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Module exports.
- */
-
-module.exports = on;
-
-/**
- * Helper for subscriptions.
- *
- * @param {Object|EventEmitter} obj with `Emitter` mixin or `EventEmitter`
- * @param {String} event name
- * @param {Function} callback
- * @api public
- */
-
-function on(obj, ev, fn) {
-  obj.on(ev, fn);
-  return {
-    destroy: function destroy() {
-      obj.removeListener(ev, fn);
-    }
-  };
-}
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Slice reference.
- */
-
-var slice = [].slice;
-
-/**
- * Bind `obj` to `fn`.
- *
- * @param {Object} obj
- * @param {Function|String} fn or string
- * @return {Function}
- * @api public
- */
-
-module.exports = function (obj, fn) {
-  if ('string' == typeof fn) fn = obj[fn];
-  if ('function' != typeof fn) throw new Error('bind() requires a function');
-  var args = slice.call(arguments, 2);
-  return function () {
-    return fn.apply(obj, args.concat(slice.call(arguments)));
-  };
-};
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.Storage = Storage;
 function Storage() {
   var spec = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -8417,7 +5830,7 @@ function Storage() {
 }
 
 /***/ }),
-/* 44 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15968,6 +13381,2593 @@ exports.Settings = Settings;
 //# sourceMappingURL=luxon.js.map
 
 /***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+var directives = new WeakMap();
+/**
+ * Brands a function as a directive so that lit-html will call the function
+ * during template rendering, rather than passing as a value.
+ *
+ * @param f The directive factory function. Must be a function that returns a
+ * function of the signature `(part: Part) => void`. The returned function will
+ * be called with the part object
+ *
+ * @example
+ *
+ * ```
+ * import {directive, html} from 'lit-html';
+ *
+ * const immutable = directive((v) => (part) => {
+ *   if (part.value !== v) {
+ *     part.setValue(v)
+ *   }
+ * });
+ * ```
+ */
+var directive = exports.directive = function directive(f) {
+  return function () {
+    var d = f.apply(undefined, arguments);
+    directives.set(d, true);
+    return d;
+  };
+};
+var isDirective = exports.isDirective = function isDirective(o) {
+  return typeof o === 'function' && directives.has(o);
+};
+//# sourceMappingURL=directive.js.map
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * A sentinel value that signals that a value was handled by a directive and
+ * should not be written to the DOM.
+ */
+var noChange = exports.noChange = {};
+//# sourceMappingURL=part.js.map
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.TemplateInstance = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @license
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * This code may only be used under the BSD style license found at
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/LICENSE.txt
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * The complete set of authors may be found at
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/AUTHORS.txt
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * The complete set of contributors may be found at
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/CONTRIBUTORS.txt
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Code distributed by Google as part of the polymer project is also
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * subject to an additional IP rights grant found at
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/PATENTS.txt
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+
+var _dom = __webpack_require__(3);
+
+var _template = __webpack_require__(4);
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * An instance of a `Template` that can be attached to the DOM and updated
+ * with new values.
+ */
+var TemplateInstance = exports.TemplateInstance = function () {
+    function TemplateInstance(template, processor, options) {
+        _classCallCheck(this, TemplateInstance);
+
+        this._parts = [];
+        this.template = template;
+        this.processor = processor;
+        this.options = options;
+    }
+
+    _createClass(TemplateInstance, [{
+        key: 'update',
+        value: function update(values) {
+            var i = 0;
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = this._parts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var part = _step.value;
+
+                    if (part !== undefined) {
+                        part.setValue(values[i]);
+                    }
+                    i++;
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = this._parts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var _part = _step2.value;
+
+                    if (_part !== undefined) {
+                        _part.commit();
+                    }
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+        }
+    }, {
+        key: '_clone',
+        value: function _clone() {
+            var _this = this;
+
+            // When using the Custom Elements polyfill, clone the node, rather than
+            // importing it, to keep the fragment in the template's document. This
+            // leaves the fragment inert so custom elements won't upgrade and
+            // potentially modify their contents by creating a polyfilled ShadowRoot
+            // while we traverse the tree.
+            var fragment = _dom.isCEPolyfill ? this.template.element.content.cloneNode(true) : document.importNode(this.template.element.content, true);
+            var parts = this.template.parts;
+            var partIndex = 0;
+            var nodeIndex = 0;
+            var _prepareInstance = function _prepareInstance(fragment) {
+                // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be
+                // null
+                var walker = document.createTreeWalker(fragment, 133 /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */, null, false);
+                var node = walker.nextNode();
+                // Loop through all the nodes and parts of a template
+                while (partIndex < parts.length && node !== null) {
+                    var part = parts[partIndex];
+                    // Consecutive Parts may have the same node index, in the case of
+                    // multiple bound attributes on an element. So each iteration we either
+                    // increment the nodeIndex, if we aren't on a node with a part, or the
+                    // partIndex if we are. By not incrementing the nodeIndex when we find a
+                    // part, we allow for the next part to be associated with the current
+                    // node if neccessasry.
+                    if (!(0, _template.isTemplatePartActive)(part)) {
+                        _this._parts.push(undefined);
+                        partIndex++;
+                    } else if (nodeIndex === part.index) {
+                        if (part.type === 'node') {
+                            var _part2 = _this.processor.handleTextExpression(_this.options);
+                            _part2.insertAfterNode(node);
+                            _this._parts.push(_part2);
+                        } else {
+                            var _parts;
+
+                            (_parts = _this._parts).push.apply(_parts, _toConsumableArray(_this.processor.handleAttributeExpressions(node, part.name, part.strings, _this.options)));
+                        }
+                        partIndex++;
+                    } else {
+                        nodeIndex++;
+                        if (node.nodeName === 'TEMPLATE') {
+                            _prepareInstance(node.content);
+                        }
+                        node = walker.nextNode();
+                    }
+                }
+            };
+            _prepareInstance(fragment);
+            if (_dom.isCEPolyfill) {
+                document.adoptNode(fragment);
+                customElements.upgrade(fragment);
+            }
+            return fragment;
+        }
+    }]);
+
+    return TemplateInstance;
+}();
+//# sourceMappingURL=template-instance.js.map
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.SVGTemplateResult = exports.TemplateResult = undefined;
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @license
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * This code may only be used under the BSD style license found at
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/LICENSE.txt
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * The complete set of authors may be found at
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/AUTHORS.txt
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * The complete set of contributors may be found at
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/CONTRIBUTORS.txt
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Code distributed by Google as part of the polymer project is also
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * subject to an additional IP rights grant found at
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://polymer.github.io/PATENTS.txt
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+
+var _dom = __webpack_require__(3);
+
+var _template = __webpack_require__(4);
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * The return type of `html`, which holds a Template and the values from
+ * interpolated expressions.
+ */
+var TemplateResult = exports.TemplateResult = function () {
+    function TemplateResult(strings, values, type, processor) {
+        _classCallCheck(this, TemplateResult);
+
+        this.strings = strings;
+        this.values = values;
+        this.type = type;
+        this.processor = processor;
+    }
+    /**
+     * Returns a string of HTML used to create a `<template>` element.
+     */
+
+
+    _createClass(TemplateResult, [{
+        key: 'getHTML',
+        value: function getHTML() {
+            var endIndex = this.strings.length - 1;
+            var html = '';
+            for (var i = 0; i < endIndex; i++) {
+                var s = this.strings[i];
+                // This replace() call does two things:
+                // 1) Appends a suffix to all bound attribute names to opt out of special
+                // attribute value parsing that IE11 and Edge do, like for style and
+                // many SVG attributes. The Template class also appends the same suffix
+                // when looking up attributes to creat Parts.
+                // 2) Adds an unquoted-attribute-safe marker for the first expression in
+                // an attribute. Subsequent attribute expressions will use node markers,
+                // and this is safe since attributes with multiple expressions are
+                // guaranteed to be quoted.
+                var addedMarker = false;
+                html += s.replace(_template.lastAttributeNameRegex, function (_match, whitespace, name, value) {
+                    addedMarker = true;
+                    return whitespace + name + _template.boundAttributeSuffix + value + _template.marker;
+                });
+                if (!addedMarker) {
+                    html += _template.nodeMarker;
+                }
+            }
+            return html + this.strings[endIndex];
+        }
+    }, {
+        key: 'getTemplateElement',
+        value: function getTemplateElement() {
+            var template = document.createElement('template');
+            template.innerHTML = this.getHTML();
+            return template;
+        }
+    }]);
+
+    return TemplateResult;
+}();
+/**
+ * A TemplateResult for SVG fragments.
+ *
+ * This class wraps HTMl in an `<svg>` tag in order to parse its contents in the
+ * SVG namespace, then modifies the template to remove the `<svg>` tag so that
+ * clones only container the original fragment.
+ */
+
+
+var SVGTemplateResult = exports.SVGTemplateResult = function (_TemplateResult) {
+    _inherits(SVGTemplateResult, _TemplateResult);
+
+    function SVGTemplateResult() {
+        _classCallCheck(this, SVGTemplateResult);
+
+        return _possibleConstructorReturn(this, (SVGTemplateResult.__proto__ || Object.getPrototypeOf(SVGTemplateResult)).apply(this, arguments));
+    }
+
+    _createClass(SVGTemplateResult, [{
+        key: 'getHTML',
+        value: function getHTML() {
+            return '<svg>' + _get(SVGTemplateResult.prototype.__proto__ || Object.getPrototypeOf(SVGTemplateResult.prototype), 'getHTML', this).call(this) + '</svg>';
+        }
+    }, {
+        key: 'getTemplateElement',
+        value: function getTemplateElement() {
+            var template = _get(SVGTemplateResult.prototype.__proto__ || Object.getPrototypeOf(SVGTemplateResult.prototype), 'getTemplateElement', this).call(this);
+            var content = template.content;
+            var svgElement = content.firstChild;
+            content.removeChild(svgElement);
+            (0, _dom.reparentNodes)(content, svgElement.firstChild);
+            return template;
+        }
+    }]);
+
+    return SVGTemplateResult;
+}(TemplateResult);
+//# sourceMappingURL=template-result.js.map
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.templateCaches = undefined;
+exports.templateFactory = templateFactory;
+
+var _template = __webpack_require__(4);
+
+/**
+ * The default TemplateFactory which caches Templates keyed on
+ * result.type and result.strings.
+ */
+function templateFactory(result) {
+    var templateCache = templateCaches.get(result.type);
+    if (templateCache === undefined) {
+        templateCache = {
+            stringsArray: new WeakMap(),
+            keyString: new Map()
+        };
+        templateCaches.set(result.type, templateCache);
+    }
+    var template = templateCache.stringsArray.get(result.strings);
+    if (template !== undefined) {
+        return template;
+    }
+    // If the TemplateStringsArray is new, generate a key from the strings
+    // This key is shared between all templates with identical content
+    var key = result.strings.join(_template.marker);
+    // Check if we already have a Template for this key
+    template = templateCache.keyString.get(key);
+    if (template === undefined) {
+        // If we have not seen this key before, create a new Template
+        template = new _template.Template(result, result.getTemplateElement());
+        // Cache the Template for this key
+        templateCache.keyString.set(key, template);
+    }
+    // Cache all future queries for this TemplateStringsArray
+    templateCache.stringsArray.set(result.strings, template);
+    return template;
+} /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+var templateCaches = exports.templateCaches = new Map();
+//# sourceMappingURL=template-factory.js.map
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * @license
+ * Copyright 2016 Google Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+/**
+ * @template A
+ */
+var MDCFoundation = function () {
+  _createClass(MDCFoundation, null, [{
+    key: "cssClasses",
+
+    /** @return enum{cssClasses} */
+    get: function get() {
+      // Classes extending MDCFoundation should implement this method to return an object which exports every
+      // CSS class the foundation class needs as a property. e.g. {ACTIVE: 'mdc-component--active'}
+      return {};
+    }
+
+    /** @return enum{strings} */
+
+  }, {
+    key: "strings",
+    get: function get() {
+      // Classes extending MDCFoundation should implement this method to return an object which exports all
+      // semantic strings as constants. e.g. {ARIA_ROLE: 'tablist'}
+      return {};
+    }
+
+    /** @return enum{numbers} */
+
+  }, {
+    key: "numbers",
+    get: function get() {
+      // Classes extending MDCFoundation should implement this method to return an object which exports all
+      // of its semantic numbers as constants. e.g. {ANIMATION_DELAY_MS: 350}
+      return {};
+    }
+
+    /** @return {!Object} */
+
+  }, {
+    key: "defaultAdapter",
+    get: function get() {
+      // Classes extending MDCFoundation may choose to implement this getter in order to provide a convenient
+      // way of viewing the necessary methods of an adapter. In the future, this could also be used for adapter
+      // validation.
+      return {};
+    }
+
+    /**
+     * @param {A=} adapter
+     */
+
+  }]);
+
+  function MDCFoundation() {
+    var adapter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, MDCFoundation);
+
+    /** @protected {!A} */
+    this.adapter_ = adapter;
+  }
+
+  _createClass(MDCFoundation, [{
+    key: "init",
+    value: function init() {
+      // Subclasses should override this method to perform initialization routines (registering events, etc.)
+    }
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      // Subclasses should override this method to perform de-initialization routines (de-registering events, etc.)
+    }
+  }]);
+
+  return MDCFoundation;
+}();
+
+exports.default = MDCFoundation;
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * @license
+ * Copyright 2016 Google Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+/* eslint no-unused-vars: [2, {"args": "none"}] */
+
+/**
+ * Adapter for MDC Ripple. Provides an interface for managing
+ * - classes
+ * - dom
+ * - CSS variables
+ * - position
+ * - dimensions
+ * - scroll position
+ * - event handlers
+ * - unbounded, active and disabled states
+ *
+ * Additionally, provides type information for the adapter to the Closure
+ * compiler.
+ *
+ * Implement this adapter for your framework of choice to delegate updates to
+ * the component in your framework of choice. See architecture documentation
+ * for more details.
+ * https://github.com/material-components/material-components-web/blob/master/docs/code/architecture.md
+ *
+ * @record
+ */
+var MDCRippleAdapter = function () {
+  function MDCRippleAdapter() {
+    _classCallCheck(this, MDCRippleAdapter);
+  }
+
+  _createClass(MDCRippleAdapter, [{
+    key: "browserSupportsCssVars",
+
+    /** @return {boolean} */
+    value: function browserSupportsCssVars() {}
+
+    /** @return {boolean} */
+
+  }, {
+    key: "isUnbounded",
+    value: function isUnbounded() {}
+
+    /** @return {boolean} */
+
+  }, {
+    key: "isSurfaceActive",
+    value: function isSurfaceActive() {}
+
+    /** @return {boolean} */
+
+  }, {
+    key: "isSurfaceDisabled",
+    value: function isSurfaceDisabled() {}
+
+    /** @param {string} className */
+
+  }, {
+    key: "addClass",
+    value: function addClass(className) {}
+
+    /** @param {string} className */
+
+  }, {
+    key: "removeClass",
+    value: function removeClass(className) {}
+
+    /** @param {!EventTarget} target */
+
+  }, {
+    key: "containsEventTarget",
+    value: function containsEventTarget(target) {}
+
+    /**
+     * @param {string} evtType
+     * @param {!Function} handler
+     */
+
+  }, {
+    key: "registerInteractionHandler",
+    value: function registerInteractionHandler(evtType, handler) {}
+
+    /**
+     * @param {string} evtType
+     * @param {!Function} handler
+     */
+
+  }, {
+    key: "deregisterInteractionHandler",
+    value: function deregisterInteractionHandler(evtType, handler) {}
+
+    /**
+     * @param {string} evtType
+     * @param {!Function} handler
+     */
+
+  }, {
+    key: "registerDocumentInteractionHandler",
+    value: function registerDocumentInteractionHandler(evtType, handler) {}
+
+    /**
+     * @param {string} evtType
+     * @param {!Function} handler
+     */
+
+  }, {
+    key: "deregisterDocumentInteractionHandler",
+    value: function deregisterDocumentInteractionHandler(evtType, handler) {}
+
+    /**
+     * @param {!Function} handler
+     */
+
+  }, {
+    key: "registerResizeHandler",
+    value: function registerResizeHandler(handler) {}
+
+    /**
+     * @param {!Function} handler
+     */
+
+  }, {
+    key: "deregisterResizeHandler",
+    value: function deregisterResizeHandler(handler) {}
+
+    /**
+     * @param {string} varName
+     * @param {?number|string} value
+     */
+
+  }, {
+    key: "updateCssVariable",
+    value: function updateCssVariable(varName, value) {}
+
+    /** @return {!ClientRect} */
+
+  }, {
+    key: "computeBoundingRect",
+    value: function computeBoundingRect() {}
+
+    /** @return {{x: number, y: number}} */
+
+  }, {
+    key: "getWindowPageOffset",
+    value: function getWindowPageOffset() {}
+  }]);
+
+  return MDCRippleAdapter;
+}();
+
+exports.default = MDCRippleAdapter;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @license
+ * Copyright 2016 Google Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+/**
+ * Stores result from supportsCssVariables to avoid redundant processing to detect CSS custom variable support.
+ * @private {boolean|undefined}
+ */
+var supportsCssVariables_ = void 0;
+
+/**
+ * Stores result from applyPassive to avoid redundant processing to detect passive event listener support.
+ * @private {boolean|undefined}
+ */
+var supportsPassive_ = void 0;
+
+/**
+ * @param {!Window} windowObj
+ * @return {boolean}
+ */
+function detectEdgePseudoVarBug(windowObj) {
+  // Detect versions of Edge with buggy var() support
+  // See: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11495448/
+  var document = windowObj.document;
+  var node = document.createElement('div');
+  node.className = 'mdc-ripple-surface--test-edge-var-bug';
+  document.body.appendChild(node);
+
+  // The bug exists if ::before style ends up propagating to the parent element.
+  // Additionally, getComputedStyle returns null in iframes with display: "none" in Firefox,
+  // but Firefox is known to support CSS custom properties correctly.
+  // See: https://bugzilla.mozilla.org/show_bug.cgi?id=548397
+  var computedStyle = windowObj.getComputedStyle(node);
+  var hasPseudoVarBug = computedStyle !== null && computedStyle.borderTopStyle === 'solid';
+  node.remove();
+  return hasPseudoVarBug;
+}
+
+/**
+ * @param {!Window} windowObj
+ * @param {boolean=} forceRefresh
+ * @return {boolean|undefined}
+ */
+
+function supportsCssVariables(windowObj) {
+  var forceRefresh = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  var supportsCssVariables = supportsCssVariables_;
+  if (typeof supportsCssVariables_ === 'boolean' && !forceRefresh) {
+    return supportsCssVariables;
+  }
+
+  var supportsFunctionPresent = windowObj.CSS && typeof windowObj.CSS.supports === 'function';
+  if (!supportsFunctionPresent) {
+    return;
+  }
+
+  var explicitlySupportsCssVars = windowObj.CSS.supports('--css-vars', 'yes');
+  // See: https://bugs.webkit.org/show_bug.cgi?id=154669
+  // See: README section on Safari
+  var weAreFeatureDetectingSafari10plus = windowObj.CSS.supports('(--css-vars: yes)') && windowObj.CSS.supports('color', '#00000000');
+
+  if (explicitlySupportsCssVars || weAreFeatureDetectingSafari10plus) {
+    supportsCssVariables = !detectEdgePseudoVarBug(windowObj);
+  } else {
+    supportsCssVariables = false;
+  }
+
+  if (!forceRefresh) {
+    supportsCssVariables_ = supportsCssVariables;
+  }
+  return supportsCssVariables;
+}
+
+//
+/**
+ * Determine whether the current browser supports passive event listeners, and if so, use them.
+ * @param {!Window=} globalObj
+ * @param {boolean=} forceRefresh
+ * @return {boolean|!EventListenerOptions}
+ */
+function applyPassive() {
+  var globalObj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window;
+  var forceRefresh = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  if (supportsPassive_ === undefined || forceRefresh) {
+    var isSupported = false;
+    try {
+      globalObj.document.addEventListener('test', null, { get passive() {
+          isSupported = true;
+          return isSupported;
+        } });
+    } catch (e) {}
+
+    supportsPassive_ = isSupported;
+  }
+
+  return supportsPassive_ ? /** @type {!EventListenerOptions} */{ passive: true } : false;
+}
+
+/**
+ * @param {!Object} HTMLElementPrototype
+ * @return {string}
+ */
+function getMatchesProperty(HTMLElementPrototype) {
+  /**
+   * Order is important because we return the first existing method we find.
+   * Do not change the order of the items in the below array.
+   */
+  var matchesMethods = ['matches', 'webkitMatchesSelector', 'msMatchesSelector'];
+  var method = 'matches';
+  for (var i = 0; i < matchesMethods.length; i++) {
+    var matchesMethod = matchesMethods[i];
+    if (matchesMethod in HTMLElementPrototype) {
+      method = matchesMethod;
+      break;
+    }
+  }
+
+  return method;
+}
+
+/**
+ * @param {!Event} ev
+ * @param {{x: number, y: number}} pageOffset
+ * @param {!ClientRect} clientRect
+ * @return {{x: number, y: number}}
+ */
+function getNormalizedEventCoords(ev, pageOffset, clientRect) {
+  var x = pageOffset.x,
+      y = pageOffset.y;
+
+  var documentX = x + clientRect.left;
+  var documentY = y + clientRect.top;
+
+  var normalizedX = void 0;
+  var normalizedY = void 0;
+  // Determine touch point relative to the ripple container.
+  if (ev.type === 'touchstart') {
+    ev = /** @type {!TouchEvent} */ev;
+    normalizedX = ev.changedTouches[0].pageX - documentX;
+    normalizedY = ev.changedTouches[0].pageY - documentY;
+  } else {
+    ev = /** @type {!MouseEvent} */ev;
+    normalizedX = ev.pageX - documentX;
+    normalizedY = ev.pageY - documentY;
+  }
+
+  return { x: normalizedX, y: normalizedY };
+}
+
+exports.supportsCssVariables = supportsCssVariables;
+exports.applyPassive = applyPassive;
+exports.getMatchesProperty = getMatchesProperty;
+exports.getNormalizedEventCoords = getNormalizedEventCoords;
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Parses an URI
+ *
+ * @author Steven Levithan <stevenlevithan.com> (MIT license)
+ * @api private
+ */
+
+var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
+
+var parts = ['source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'];
+
+module.exports = function parseuri(str) {
+    var src = str,
+        b = str.indexOf('['),
+        e = str.indexOf(']');
+
+    if (b != -1 && e != -1) {
+        str = str.substring(0, b) + str.substring(b, e).replace(/:/g, ';') + str.substring(e, str.length);
+    }
+
+    var m = re.exec(str || ''),
+        uri = {},
+        i = 14;
+
+    while (i--) {
+        uri[parts[i]] = m[i] || '';
+    }
+
+    if (b != -1 && e != -1) {
+        uri.source = src;
+        uri.host = uri.host.substring(1, uri.host.length - 1).replace(/;/g, ':');
+        uri.authority = uri.authority.replace('[', '').replace(']', '').replace(/;/g, ':');
+        uri.ipv6uri = true;
+    }
+
+    return uri;
+};
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(Buffer) {
+
+module.exports = isBuf;
+
+var withNativeBuffer = typeof Buffer === 'function' && typeof Buffer.isBuffer === 'function';
+var withNativeArrayBuffer = typeof ArrayBuffer === 'function';
+
+var isView = function isView(obj) {
+  return typeof ArrayBuffer.isView === 'function' ? ArrayBuffer.isView(obj) : obj.buffer instanceof ArrayBuffer;
+};
+
+/**
+ * Returns true if obj is a buffer or an arraybuffer.
+ *
+ * @api private
+ */
+
+function isBuf(obj) {
+  return withNativeBuffer && Buffer.isBuffer(obj) || withNativeArrayBuffer && (obj instanceof ArrayBuffer || isView(obj));
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20).Buffer))
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var g;
+
+// This works in non-strict mode
+g = function () {
+	return this;
+}();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1, eval)("this");
+} catch (e) {
+	// This works if the window reference is available
+	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/**
+ * Module dependencies.
+ */
+
+var eio = __webpack_require__(67);
+var Socket = __webpack_require__(42);
+var Emitter = __webpack_require__(1);
+var parser = __webpack_require__(18);
+var on = __webpack_require__(43);
+var bind = __webpack_require__(44);
+var debug = __webpack_require__(6)('socket.io-client:manager');
+var indexOf = __webpack_require__(41);
+var Backoff = __webpack_require__(82);
+
+/**
+ * IE6+ hasOwnProperty
+ */
+
+var has = Object.prototype.hasOwnProperty;
+
+/**
+ * Module exports
+ */
+
+module.exports = Manager;
+
+/**
+ * `Manager` constructor.
+ *
+ * @param {String} engine instance or engine uri/opts
+ * @param {Object} options
+ * @api public
+ */
+
+function Manager(uri, opts) {
+  if (!(this instanceof Manager)) return new Manager(uri, opts);
+  if (uri && 'object' === (typeof uri === 'undefined' ? 'undefined' : _typeof(uri))) {
+    opts = uri;
+    uri = undefined;
+  }
+  opts = opts || {};
+
+  opts.path = opts.path || '/socket.io';
+  this.nsps = {};
+  this.subs = [];
+  this.opts = opts;
+  this.reconnection(opts.reconnection !== false);
+  this.reconnectionAttempts(opts.reconnectionAttempts || Infinity);
+  this.reconnectionDelay(opts.reconnectionDelay || 1000);
+  this.reconnectionDelayMax(opts.reconnectionDelayMax || 5000);
+  this.randomizationFactor(opts.randomizationFactor || 0.5);
+  this.backoff = new Backoff({
+    min: this.reconnectionDelay(),
+    max: this.reconnectionDelayMax(),
+    jitter: this.randomizationFactor()
+  });
+  this.timeout(null == opts.timeout ? 20000 : opts.timeout);
+  this.readyState = 'closed';
+  this.uri = uri;
+  this.connecting = [];
+  this.lastPing = null;
+  this.encoding = false;
+  this.packetBuffer = [];
+  var _parser = opts.parser || parser;
+  this.encoder = new _parser.Encoder();
+  this.decoder = new _parser.Decoder();
+  this.autoConnect = opts.autoConnect !== false;
+  if (this.autoConnect) this.open();
+}
+
+/**
+ * Propagate given event to sockets and emit on `this`
+ *
+ * @api private
+ */
+
+Manager.prototype.emitAll = function () {
+  this.emit.apply(this, arguments);
+  for (var nsp in this.nsps) {
+    if (has.call(this.nsps, nsp)) {
+      this.nsps[nsp].emit.apply(this.nsps[nsp], arguments);
+    }
+  }
+};
+
+/**
+ * Update `socket.id` of all sockets
+ *
+ * @api private
+ */
+
+Manager.prototype.updateSocketIds = function () {
+  for (var nsp in this.nsps) {
+    if (has.call(this.nsps, nsp)) {
+      this.nsps[nsp].id = this.generateId(nsp);
+    }
+  }
+};
+
+/**
+ * generate `socket.id` for the given `nsp`
+ *
+ * @param {String} nsp
+ * @return {String}
+ * @api private
+ */
+
+Manager.prototype.generateId = function (nsp) {
+  return (nsp === '/' ? '' : nsp + '#') + this.engine.id;
+};
+
+/**
+ * Mix in `Emitter`.
+ */
+
+Emitter(Manager.prototype);
+
+/**
+ * Sets the `reconnection` config.
+ *
+ * @param {Boolean} true/false if it should automatically reconnect
+ * @return {Manager} self or value
+ * @api public
+ */
+
+Manager.prototype.reconnection = function (v) {
+  if (!arguments.length) return this._reconnection;
+  this._reconnection = !!v;
+  return this;
+};
+
+/**
+ * Sets the reconnection attempts config.
+ *
+ * @param {Number} max reconnection attempts before giving up
+ * @return {Manager} self or value
+ * @api public
+ */
+
+Manager.prototype.reconnectionAttempts = function (v) {
+  if (!arguments.length) return this._reconnectionAttempts;
+  this._reconnectionAttempts = v;
+  return this;
+};
+
+/**
+ * Sets the delay between reconnections.
+ *
+ * @param {Number} delay
+ * @return {Manager} self or value
+ * @api public
+ */
+
+Manager.prototype.reconnectionDelay = function (v) {
+  if (!arguments.length) return this._reconnectionDelay;
+  this._reconnectionDelay = v;
+  this.backoff && this.backoff.setMin(v);
+  return this;
+};
+
+Manager.prototype.randomizationFactor = function (v) {
+  if (!arguments.length) return this._randomizationFactor;
+  this._randomizationFactor = v;
+  this.backoff && this.backoff.setJitter(v);
+  return this;
+};
+
+/**
+ * Sets the maximum delay between reconnections.
+ *
+ * @param {Number} delay
+ * @return {Manager} self or value
+ * @api public
+ */
+
+Manager.prototype.reconnectionDelayMax = function (v) {
+  if (!arguments.length) return this._reconnectionDelayMax;
+  this._reconnectionDelayMax = v;
+  this.backoff && this.backoff.setMax(v);
+  return this;
+};
+
+/**
+ * Sets the connection timeout. `false` to disable
+ *
+ * @return {Manager} self or value
+ * @api public
+ */
+
+Manager.prototype.timeout = function (v) {
+  if (!arguments.length) return this._timeout;
+  this._timeout = v;
+  return this;
+};
+
+/**
+ * Starts trying to reconnect if reconnection is enabled and we have not
+ * started reconnecting yet
+ *
+ * @api private
+ */
+
+Manager.prototype.maybeReconnectOnOpen = function () {
+  // Only try to reconnect if it's the first time we're connecting
+  if (!this.reconnecting && this._reconnection && this.backoff.attempts === 0) {
+    // keeps reconnection from firing twice for the same reconnection loop
+    this.reconnect();
+  }
+};
+
+/**
+ * Sets the current transport `socket`.
+ *
+ * @param {Function} optional, callback
+ * @return {Manager} self
+ * @api public
+ */
+
+Manager.prototype.open = Manager.prototype.connect = function (fn, opts) {
+  debug('readyState %s', this.readyState);
+  if (~this.readyState.indexOf('open')) return this;
+
+  debug('opening %s', this.uri);
+  this.engine = eio(this.uri, this.opts);
+  var socket = this.engine;
+  var self = this;
+  this.readyState = 'opening';
+  this.skipReconnect = false;
+
+  // emit `open`
+  var openSub = on(socket, 'open', function () {
+    self.onopen();
+    fn && fn();
+  });
+
+  // emit `connect_error`
+  var errorSub = on(socket, 'error', function (data) {
+    debug('connect_error');
+    self.cleanup();
+    self.readyState = 'closed';
+    self.emitAll('connect_error', data);
+    if (fn) {
+      var err = new Error('Connection error');
+      err.data = data;
+      fn(err);
+    } else {
+      // Only do this if there is no fn to handle the error
+      self.maybeReconnectOnOpen();
+    }
+  });
+
+  // emit `connect_timeout`
+  if (false !== this._timeout) {
+    var timeout = this._timeout;
+    debug('connect attempt will timeout after %d', timeout);
+
+    // set timer
+    var timer = setTimeout(function () {
+      debug('connect attempt timed out after %d', timeout);
+      openSub.destroy();
+      socket.close();
+      socket.emit('error', 'timeout');
+      self.emitAll('connect_timeout', timeout);
+    }, timeout);
+
+    this.subs.push({
+      destroy: function destroy() {
+        clearTimeout(timer);
+      }
+    });
+  }
+
+  this.subs.push(openSub);
+  this.subs.push(errorSub);
+
+  return this;
+};
+
+/**
+ * Called upon transport open.
+ *
+ * @api private
+ */
+
+Manager.prototype.onopen = function () {
+  debug('open');
+
+  // clear old subs
+  this.cleanup();
+
+  // mark as open
+  this.readyState = 'open';
+  this.emit('open');
+
+  // add new subs
+  var socket = this.engine;
+  this.subs.push(on(socket, 'data', bind(this, 'ondata')));
+  this.subs.push(on(socket, 'ping', bind(this, 'onping')));
+  this.subs.push(on(socket, 'pong', bind(this, 'onpong')));
+  this.subs.push(on(socket, 'error', bind(this, 'onerror')));
+  this.subs.push(on(socket, 'close', bind(this, 'onclose')));
+  this.subs.push(on(this.decoder, 'decoded', bind(this, 'ondecoded')));
+};
+
+/**
+ * Called upon a ping.
+ *
+ * @api private
+ */
+
+Manager.prototype.onping = function () {
+  this.lastPing = new Date();
+  this.emitAll('ping');
+};
+
+/**
+ * Called upon a packet.
+ *
+ * @api private
+ */
+
+Manager.prototype.onpong = function () {
+  this.emitAll('pong', new Date() - this.lastPing);
+};
+
+/**
+ * Called with data.
+ *
+ * @api private
+ */
+
+Manager.prototype.ondata = function (data) {
+  this.decoder.add(data);
+};
+
+/**
+ * Called when parser fully decodes a packet.
+ *
+ * @api private
+ */
+
+Manager.prototype.ondecoded = function (packet) {
+  this.emit('packet', packet);
+};
+
+/**
+ * Called upon socket error.
+ *
+ * @api private
+ */
+
+Manager.prototype.onerror = function (err) {
+  debug('error', err);
+  this.emitAll('error', err);
+};
+
+/**
+ * Creates a new socket for the given `nsp`.
+ *
+ * @return {Socket}
+ * @api public
+ */
+
+Manager.prototype.socket = function (nsp, opts) {
+  var socket = this.nsps[nsp];
+  if (!socket) {
+    socket = new Socket(this, nsp, opts);
+    this.nsps[nsp] = socket;
+    var self = this;
+    socket.on('connecting', onConnecting);
+    socket.on('connect', function () {
+      socket.id = self.generateId(nsp);
+    });
+
+    if (this.autoConnect) {
+      // manually call here since connecting event is fired before listening
+      onConnecting();
+    }
+  }
+
+  function onConnecting() {
+    if (!~indexOf(self.connecting, socket)) {
+      self.connecting.push(socket);
+    }
+  }
+
+  return socket;
+};
+
+/**
+ * Called upon a socket close.
+ *
+ * @param {Socket} socket
+ */
+
+Manager.prototype.destroy = function (socket) {
+  var index = indexOf(this.connecting, socket);
+  if (~index) this.connecting.splice(index, 1);
+  if (this.connecting.length) return;
+
+  this.close();
+};
+
+/**
+ * Writes a packet.
+ *
+ * @param {Object} packet
+ * @api private
+ */
+
+Manager.prototype.packet = function (packet) {
+  debug('writing packet %j', packet);
+  var self = this;
+  if (packet.query && packet.type === 0) packet.nsp += '?' + packet.query;
+
+  if (!self.encoding) {
+    // encode, then write to engine with result
+    self.encoding = true;
+    this.encoder.encode(packet, function (encodedPackets) {
+      for (var i = 0; i < encodedPackets.length; i++) {
+        self.engine.write(encodedPackets[i], packet.options);
+      }
+      self.encoding = false;
+      self.processPacketQueue();
+    });
+  } else {
+    // add packet to the queue
+    self.packetBuffer.push(packet);
+  }
+};
+
+/**
+ * If packet buffer is non-empty, begins encoding the
+ * next packet in line.
+ *
+ * @api private
+ */
+
+Manager.prototype.processPacketQueue = function () {
+  if (this.packetBuffer.length > 0 && !this.encoding) {
+    var pack = this.packetBuffer.shift();
+    this.packet(pack);
+  }
+};
+
+/**
+ * Clean up transport subscriptions and packet buffer.
+ *
+ * @api private
+ */
+
+Manager.prototype.cleanup = function () {
+  debug('cleanup');
+
+  var subsLength = this.subs.length;
+  for (var i = 0; i < subsLength; i++) {
+    var sub = this.subs.shift();
+    sub.destroy();
+  }
+
+  this.packetBuffer = [];
+  this.encoding = false;
+  this.lastPing = null;
+
+  this.decoder.destroy();
+};
+
+/**
+ * Close the current socket.
+ *
+ * @api private
+ */
+
+Manager.prototype.close = Manager.prototype.disconnect = function () {
+  debug('disconnect');
+  this.skipReconnect = true;
+  this.reconnecting = false;
+  if ('opening' === this.readyState) {
+    // `onclose` will not fire because
+    // an open event never happened
+    this.cleanup();
+  }
+  this.backoff.reset();
+  this.readyState = 'closed';
+  if (this.engine) this.engine.close();
+};
+
+/**
+ * Called upon engine close.
+ *
+ * @api private
+ */
+
+Manager.prototype.onclose = function (reason) {
+  debug('onclose');
+
+  this.cleanup();
+  this.backoff.reset();
+  this.readyState = 'closed';
+  this.emit('close', reason);
+
+  if (this._reconnection && !this.skipReconnect) {
+    this.reconnect();
+  }
+};
+
+/**
+ * Attempt a reconnection.
+ *
+ * @api private
+ */
+
+Manager.prototype.reconnect = function () {
+  if (this.reconnecting || this.skipReconnect) return this;
+
+  var self = this;
+
+  if (this.backoff.attempts >= this._reconnectionAttempts) {
+    debug('reconnect failed');
+    this.backoff.reset();
+    this.emitAll('reconnect_failed');
+    this.reconnecting = false;
+  } else {
+    var delay = this.backoff.duration();
+    debug('will wait %dms before reconnect attempt', delay);
+
+    this.reconnecting = true;
+    var timer = setTimeout(function () {
+      if (self.skipReconnect) return;
+
+      debug('attempting reconnect');
+      self.emitAll('reconnect_attempt', self.backoff.attempts);
+      self.emitAll('reconnecting', self.backoff.attempts);
+
+      // check again for the case socket closed in above events
+      if (self.skipReconnect) return;
+
+      self.open(function (err) {
+        if (err) {
+          debug('reconnect attempt error');
+          self.reconnecting = false;
+          self.reconnect();
+          self.emitAll('reconnect_error', err.data);
+        } else {
+          debug('reconnect success');
+          self.onreconnect();
+        }
+      });
+    }, delay);
+
+    this.subs.push({
+      destroy: function destroy() {
+        clearTimeout(timer);
+      }
+    });
+  }
+};
+
+/**
+ * Called upon successful reconnect.
+ *
+ * @api private
+ */
+
+Manager.prototype.onreconnect = function () {
+  var attempt = this.backoff.attempts;
+  this.reconnecting = false;
+  this.backoff.reset();
+  this.updateSocketIds();
+  this.emitAll('reconnect', attempt);
+};
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Module dependencies
+ */
+
+var XMLHttpRequest = __webpack_require__(21);
+var XHR = __webpack_require__(70);
+var JSONP = __webpack_require__(78);
+var websocket = __webpack_require__(79);
+
+/**
+ * Export transports.
+ */
+
+exports.polling = polling;
+exports.websocket = websocket;
+
+/**
+ * Polling transport polymorphic constructor.
+ * Decides on xhr vs jsonp based on feature detection.
+ *
+ * @api private
+ */
+
+function polling(opts) {
+  var xhr;
+  var xd = false;
+  var xs = false;
+  var jsonp = false !== opts.jsonp;
+
+  if (typeof location !== 'undefined') {
+    var isSSL = 'https:' === location.protocol;
+    var port = location.port;
+
+    // some user agents have empty `location.port`
+    if (!port) {
+      port = isSSL ? 443 : 80;
+    }
+
+    xd = opts.hostname !== location.hostname || port !== opts.port;
+    xs = opts.secure !== isSSL;
+  }
+
+  opts.xdomain = xd;
+  opts.xscheme = xs;
+  xhr = new XMLHttpRequest(opts);
+
+  if ('open' in xhr && !opts.forceJSONP) {
+    return new XHR(opts);
+  } else {
+    if (!jsonp) throw new Error('JSONP disabled');
+    return new JSONP(opts);
+  }
+}
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Module dependencies.
+ */
+
+var Transport = __webpack_require__(22);
+var parseqs = __webpack_require__(7);
+var parser = __webpack_require__(2);
+var inherit = __webpack_require__(8);
+var yeast = __webpack_require__(40);
+var debug = __webpack_require__(9)('engine.io-client:polling');
+
+/**
+ * Module exports.
+ */
+
+module.exports = Polling;
+
+/**
+ * Is XHR2 supported?
+ */
+
+var hasXHR2 = function () {
+  var XMLHttpRequest = __webpack_require__(21);
+  var xhr = new XMLHttpRequest({ xdomain: false });
+  return null != xhr.responseType;
+}();
+
+/**
+ * Polling interface.
+ *
+ * @param {Object} opts
+ * @api private
+ */
+
+function Polling(opts) {
+  var forceBase64 = opts && opts.forceBase64;
+  if (!hasXHR2 || forceBase64) {
+    this.supportsBinary = false;
+  }
+  Transport.call(this, opts);
+}
+
+/**
+ * Inherits from Transport.
+ */
+
+inherit(Polling, Transport);
+
+/**
+ * Transport name.
+ */
+
+Polling.prototype.name = 'polling';
+
+/**
+ * Opens the socket (triggers polling). We write a PING message to determine
+ * when the transport is open.
+ *
+ * @api private
+ */
+
+Polling.prototype.doOpen = function () {
+  this.poll();
+};
+
+/**
+ * Pauses polling.
+ *
+ * @param {Function} callback upon buffers are flushed and transport is paused
+ * @api private
+ */
+
+Polling.prototype.pause = function (onPause) {
+  var self = this;
+
+  this.readyState = 'pausing';
+
+  function pause() {
+    debug('paused');
+    self.readyState = 'paused';
+    onPause();
+  }
+
+  if (this.polling || !this.writable) {
+    var total = 0;
+
+    if (this.polling) {
+      debug('we are currently polling - waiting to pause');
+      total++;
+      this.once('pollComplete', function () {
+        debug('pre-pause polling complete');
+        --total || pause();
+      });
+    }
+
+    if (!this.writable) {
+      debug('we are currently writing - waiting to pause');
+      total++;
+      this.once('drain', function () {
+        debug('pre-pause writing complete');
+        --total || pause();
+      });
+    }
+  } else {
+    pause();
+  }
+};
+
+/**
+ * Starts polling cycle.
+ *
+ * @api public
+ */
+
+Polling.prototype.poll = function () {
+  debug('polling');
+  this.polling = true;
+  this.doPoll();
+  this.emit('poll');
+};
+
+/**
+ * Overloads onData to detect payloads.
+ *
+ * @api private
+ */
+
+Polling.prototype.onData = function (data) {
+  var self = this;
+  debug('polling got data %s', data);
+  var callback = function callback(packet, index, total) {
+    // if its the first message we consider the transport open
+    if ('opening' === self.readyState) {
+      self.onOpen();
+    }
+
+    // if its a close packet, we close the ongoing requests
+    if ('close' === packet.type) {
+      self.onClose();
+      return false;
+    }
+
+    // otherwise bypass onData and handle the message
+    self.onPacket(packet);
+  };
+
+  // decode payload
+  parser.decodePayload(data, this.socket.binaryType, callback);
+
+  // if an event did not trigger closing
+  if ('closed' !== this.readyState) {
+    // if we got data we're not polling
+    this.polling = false;
+    this.emit('pollComplete');
+
+    if ('open' === this.readyState) {
+      this.poll();
+    } else {
+      debug('ignoring poll - transport state "%s"', this.readyState);
+    }
+  }
+};
+
+/**
+ * For polling, send a close packet.
+ *
+ * @api private
+ */
+
+Polling.prototype.doClose = function () {
+  var self = this;
+
+  function close() {
+    debug('writing close packet');
+    self.write([{ type: 'close' }]);
+  }
+
+  if ('open' === this.readyState) {
+    debug('transport open - closing');
+    close();
+  } else {
+    // in case we're trying to close while
+    // handshaking is in progress (GH-164)
+    debug('transport not open - deferring close');
+    this.once('open', close);
+  }
+};
+
+/**
+ * Writes a packets payload.
+ *
+ * @param {Array} data packets
+ * @param {Function} drain callback
+ * @api private
+ */
+
+Polling.prototype.write = function (packets) {
+  var self = this;
+  this.writable = false;
+  var callbackfn = function callbackfn() {
+    self.writable = true;
+    self.emit('drain');
+  };
+
+  parser.encodePayload(packets, this.supportsBinary, function (data) {
+    self.doWrite(data, callbackfn);
+  });
+};
+
+/**
+ * Generates uri for connection.
+ *
+ * @api private
+ */
+
+Polling.prototype.uri = function () {
+  var query = this.query || {};
+  var schema = this.secure ? 'https' : 'http';
+  var port = '';
+
+  // cache busting is forced
+  if (false !== this.timestampRequests) {
+    query[this.timestampParam] = yeast();
+  }
+
+  if (!this.supportsBinary && !query.sid) {
+    query.b64 = 1;
+  }
+
+  query = parseqs.encode(query);
+
+  // avoid port if default for schema
+  if (this.port && ('https' === schema && Number(this.port) !== 443 || 'http' === schema && Number(this.port) !== 80)) {
+    port = ':' + this.port;
+  }
+
+  // prepend ? to query
+  if (query.length) {
+    query = '?' + query;
+  }
+
+  var ipv6 = this.hostname.indexOf(':') !== -1;
+  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
+};
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(Buffer) {
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/* global Blob File */
+
+/*
+ * Module requirements.
+ */
+
+var isArray = __webpack_require__(19);
+
+var toString = Object.prototype.toString;
+var withNativeBlob = typeof Blob === 'function' || typeof Blob !== 'undefined' && toString.call(Blob) === '[object BlobConstructor]';
+var withNativeFile = typeof File === 'function' || typeof File !== 'undefined' && toString.call(File) === '[object FileConstructor]';
+
+/**
+ * Module exports.
+ */
+
+module.exports = hasBinary;
+
+/**
+ * Checks for binary data.
+ *
+ * Supports Buffer, ArrayBuffer, Blob and File.
+ *
+ * @param {Object} anything
+ * @api public
+ */
+
+function hasBinary(obj) {
+  if (!obj || (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) !== 'object') {
+    return false;
+  }
+
+  if (isArray(obj)) {
+    for (var i = 0, l = obj.length; i < l; i++) {
+      if (hasBinary(obj[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  if (typeof Buffer === 'function' && Buffer.isBuffer && Buffer.isBuffer(obj) || typeof ArrayBuffer === 'function' && obj instanceof ArrayBuffer || withNativeBlob && obj instanceof Blob || withNativeFile && obj instanceof File) {
+    return true;
+  }
+
+  // see: https://github.com/Automattic/has-binary/pull/4
+  if (obj.toJSON && typeof obj.toJSON === 'function' && arguments.length === 1) {
+    return hasBinary(obj.toJSON(), true);
+  }
+
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key) && hasBinary(obj[key])) {
+      return true;
+    }
+  }
+
+  return false;
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20).Buffer))
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split(''),
+    length = 64,
+    map = {},
+    seed = 0,
+    i = 0,
+    prev;
+
+/**
+ * Return a string representing the specified number.
+ *
+ * @param {Number} num The number to convert.
+ * @returns {String} The string representation of the number.
+ * @api public
+ */
+function encode(num) {
+  var encoded = '';
+
+  do {
+    encoded = alphabet[num % length] + encoded;
+    num = Math.floor(num / length);
+  } while (num > 0);
+
+  return encoded;
+}
+
+/**
+ * Return the integer value specified by the given string.
+ *
+ * @param {String} str The string to convert.
+ * @returns {Number} The integer value represented by the string.
+ * @api public
+ */
+function decode(str) {
+  var decoded = 0;
+
+  for (i = 0; i < str.length; i++) {
+    decoded = decoded * length + map[str.charAt(i)];
+  }
+
+  return decoded;
+}
+
+/**
+ * Yeast: A tiny growing id generator.
+ *
+ * @returns {String} A unique id.
+ * @api public
+ */
+function yeast() {
+  var now = encode(+new Date());
+
+  if (now !== prev) return seed = 0, prev = now;
+  return now + '.' + encode(seed++);
+}
+
+//
+// Map each character to its index.
+//
+for (; i < length; i++) {
+  map[alphabet[i]] = i;
+} //
+// Expose the `yeast`, `encode` and `decode` functions.
+//
+yeast.encode = encode;
+yeast.decode = decode;
+module.exports = yeast;
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var indexOf = [].indexOf;
+
+module.exports = function (arr, obj) {
+  if (indexOf) return arr.indexOf(obj);
+  for (var i = 0; i < arr.length; ++i) {
+    if (arr[i] === obj) return i;
+  }
+  return -1;
+};
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/**
+ * Module dependencies.
+ */
+
+var parser = __webpack_require__(18);
+var Emitter = __webpack_require__(1);
+var toArray = __webpack_require__(81);
+var on = __webpack_require__(43);
+var bind = __webpack_require__(44);
+var debug = __webpack_require__(6)('socket.io-client:socket');
+var parseqs = __webpack_require__(7);
+var hasBin = __webpack_require__(39);
+
+/**
+ * Module exports.
+ */
+
+module.exports = exports = Socket;
+
+/**
+ * Internal events (blacklisted).
+ * These events can't be emitted by the user.
+ *
+ * @api private
+ */
+
+var events = {
+  connect: 1,
+  connect_error: 1,
+  connect_timeout: 1,
+  connecting: 1,
+  disconnect: 1,
+  error: 1,
+  reconnect: 1,
+  reconnect_attempt: 1,
+  reconnect_failed: 1,
+  reconnect_error: 1,
+  reconnecting: 1,
+  ping: 1,
+  pong: 1
+};
+
+/**
+ * Shortcut to `Emitter#emit`.
+ */
+
+var emit = Emitter.prototype.emit;
+
+/**
+ * `Socket` constructor.
+ *
+ * @api public
+ */
+
+function Socket(io, nsp, opts) {
+  this.io = io;
+  this.nsp = nsp;
+  this.json = this; // compat
+  this.ids = 0;
+  this.acks = {};
+  this.receiveBuffer = [];
+  this.sendBuffer = [];
+  this.connected = false;
+  this.disconnected = true;
+  this.flags = {};
+  if (opts && opts.query) {
+    this.query = opts.query;
+  }
+  if (this.io.autoConnect) this.open();
+}
+
+/**
+ * Mix in `Emitter`.
+ */
+
+Emitter(Socket.prototype);
+
+/**
+ * Subscribe to open, close and packet events
+ *
+ * @api private
+ */
+
+Socket.prototype.subEvents = function () {
+  if (this.subs) return;
+
+  var io = this.io;
+  this.subs = [on(io, 'open', bind(this, 'onopen')), on(io, 'packet', bind(this, 'onpacket')), on(io, 'close', bind(this, 'onclose'))];
+};
+
+/**
+ * "Opens" the socket.
+ *
+ * @api public
+ */
+
+Socket.prototype.open = Socket.prototype.connect = function () {
+  if (this.connected) return this;
+
+  this.subEvents();
+  this.io.open(); // ensure open
+  if ('open' === this.io.readyState) this.onopen();
+  this.emit('connecting');
+  return this;
+};
+
+/**
+ * Sends a `message` event.
+ *
+ * @return {Socket} self
+ * @api public
+ */
+
+Socket.prototype.send = function () {
+  var args = toArray(arguments);
+  args.unshift('message');
+  this.emit.apply(this, args);
+  return this;
+};
+
+/**
+ * Override `emit`.
+ * If the event is in `events`, it's emitted normally.
+ *
+ * @param {String} event name
+ * @return {Socket} self
+ * @api public
+ */
+
+Socket.prototype.emit = function (ev) {
+  if (events.hasOwnProperty(ev)) {
+    emit.apply(this, arguments);
+    return this;
+  }
+
+  var args = toArray(arguments);
+  var packet = {
+    type: (this.flags.binary !== undefined ? this.flags.binary : hasBin(args)) ? parser.BINARY_EVENT : parser.EVENT,
+    data: args
+  };
+
+  packet.options = {};
+  packet.options.compress = !this.flags || false !== this.flags.compress;
+
+  // event ack callback
+  if ('function' === typeof args[args.length - 1]) {
+    debug('emitting packet with ack id %d', this.ids);
+    this.acks[this.ids] = args.pop();
+    packet.id = this.ids++;
+  }
+
+  if (this.connected) {
+    this.packet(packet);
+  } else {
+    this.sendBuffer.push(packet);
+  }
+
+  this.flags = {};
+
+  return this;
+};
+
+/**
+ * Sends a packet.
+ *
+ * @param {Object} packet
+ * @api private
+ */
+
+Socket.prototype.packet = function (packet) {
+  packet.nsp = this.nsp;
+  this.io.packet(packet);
+};
+
+/**
+ * Called upon engine `open`.
+ *
+ * @api private
+ */
+
+Socket.prototype.onopen = function () {
+  debug('transport is open - connecting');
+
+  // write connect packet if necessary
+  if ('/' !== this.nsp) {
+    if (this.query) {
+      var query = _typeof(this.query) === 'object' ? parseqs.encode(this.query) : this.query;
+      debug('sending connect packet with query %s', query);
+      this.packet({ type: parser.CONNECT, query: query });
+    } else {
+      this.packet({ type: parser.CONNECT });
+    }
+  }
+};
+
+/**
+ * Called upon engine `close`.
+ *
+ * @param {String} reason
+ * @api private
+ */
+
+Socket.prototype.onclose = function (reason) {
+  debug('close (%s)', reason);
+  this.connected = false;
+  this.disconnected = true;
+  delete this.id;
+  this.emit('disconnect', reason);
+};
+
+/**
+ * Called with socket packet.
+ *
+ * @param {Object} packet
+ * @api private
+ */
+
+Socket.prototype.onpacket = function (packet) {
+  var sameNamespace = packet.nsp === this.nsp;
+  var rootNamespaceError = packet.type === parser.ERROR && packet.nsp === '/';
+
+  if (!sameNamespace && !rootNamespaceError) return;
+
+  switch (packet.type) {
+    case parser.CONNECT:
+      this.onconnect();
+      break;
+
+    case parser.EVENT:
+      this.onevent(packet);
+      break;
+
+    case parser.BINARY_EVENT:
+      this.onevent(packet);
+      break;
+
+    case parser.ACK:
+      this.onack(packet);
+      break;
+
+    case parser.BINARY_ACK:
+      this.onack(packet);
+      break;
+
+    case parser.DISCONNECT:
+      this.ondisconnect();
+      break;
+
+    case parser.ERROR:
+      this.emit('error', packet.data);
+      break;
+  }
+};
+
+/**
+ * Called upon a server event.
+ *
+ * @param {Object} packet
+ * @api private
+ */
+
+Socket.prototype.onevent = function (packet) {
+  var args = packet.data || [];
+  debug('emitting event %j', args);
+
+  if (null != packet.id) {
+    debug('attaching ack callback to event');
+    args.push(this.ack(packet.id));
+  }
+
+  if (this.connected) {
+    emit.apply(this, args);
+  } else {
+    this.receiveBuffer.push(args);
+  }
+};
+
+/**
+ * Produces an ack callback to emit with an event.
+ *
+ * @api private
+ */
+
+Socket.prototype.ack = function (id) {
+  var self = this;
+  var sent = false;
+  return function () {
+    // prevent double callbacks
+    if (sent) return;
+    sent = true;
+    var args = toArray(arguments);
+    debug('sending ack %j', args);
+
+    self.packet({
+      type: hasBin(args) ? parser.BINARY_ACK : parser.ACK,
+      id: id,
+      data: args
+    });
+  };
+};
+
+/**
+ * Called upon a server acknowlegement.
+ *
+ * @param {Object} packet
+ * @api private
+ */
+
+Socket.prototype.onack = function (packet) {
+  var ack = this.acks[packet.id];
+  if ('function' === typeof ack) {
+    debug('calling ack %s with %j', packet.id, packet.data);
+    ack.apply(this, packet.data);
+    delete this.acks[packet.id];
+  } else {
+    debug('bad ack %s', packet.id);
+  }
+};
+
+/**
+ * Called upon server connect.
+ *
+ * @api private
+ */
+
+Socket.prototype.onconnect = function () {
+  this.connected = true;
+  this.disconnected = false;
+  this.emit('connect');
+  this.emitBuffered();
+};
+
+/**
+ * Emit buffered events (received and emitted).
+ *
+ * @api private
+ */
+
+Socket.prototype.emitBuffered = function () {
+  var i;
+  for (i = 0; i < this.receiveBuffer.length; i++) {
+    emit.apply(this, this.receiveBuffer[i]);
+  }
+  this.receiveBuffer = [];
+
+  for (i = 0; i < this.sendBuffer.length; i++) {
+    this.packet(this.sendBuffer[i]);
+  }
+  this.sendBuffer = [];
+};
+
+/**
+ * Called upon server disconnect.
+ *
+ * @api private
+ */
+
+Socket.prototype.ondisconnect = function () {
+  debug('server disconnect (%s)', this.nsp);
+  this.destroy();
+  this.onclose('io server disconnect');
+};
+
+/**
+ * Called upon forced client/server side disconnections,
+ * this method ensures the manager stops tracking us and
+ * that reconnections don't get triggered for this.
+ *
+ * @api private.
+ */
+
+Socket.prototype.destroy = function () {
+  if (this.subs) {
+    // clean subscriptions to avoid reconnections
+    for (var i = 0; i < this.subs.length; i++) {
+      this.subs[i].destroy();
+    }
+    this.subs = null;
+  }
+
+  this.io.destroy(this);
+};
+
+/**
+ * Disconnects the socket manually.
+ *
+ * @return {Socket} self
+ * @api public
+ */
+
+Socket.prototype.close = Socket.prototype.disconnect = function () {
+  if (this.connected) {
+    debug('performing disconnect (%s)', this.nsp);
+    this.packet({ type: parser.DISCONNECT });
+  }
+
+  // remove socket from pool
+  this.destroy();
+
+  if (this.connected) {
+    // fire events
+    this.onclose('io client disconnect');
+  }
+  return this;
+};
+
+/**
+ * Sets the compress flag.
+ *
+ * @param {Boolean} if `true`, compresses the sending data
+ * @return {Socket} self
+ * @api public
+ */
+
+Socket.prototype.compress = function (compress) {
+  this.flags.compress = compress;
+  return this;
+};
+
+/**
+ * Sets the binary flag
+ *
+ * @param {Boolean} whether the emitted data contains binary
+ * @return {Socket} self
+ * @api public
+ */
+
+Socket.prototype.binary = function (binary) {
+  this.flags.binary = binary;
+  return this;
+};
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Module exports.
+ */
+
+module.exports = on;
+
+/**
+ * Helper for subscriptions.
+ *
+ * @param {Object|EventEmitter} obj with `Emitter` mixin or `EventEmitter`
+ * @param {String} event name
+ * @param {Function} callback
+ * @api public
+ */
+
+function on(obj, ev, fn) {
+  obj.on(ev, fn);
+  return {
+    destroy: function destroy() {
+      obj.removeListener(ev, fn);
+    }
+  };
+}
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Slice reference.
+ */
+
+var slice = [].slice;
+
+/**
+ * Bind `obj` to `fn`.
+ *
+ * @param {Object} obj
+ * @param {Function|String} fn or string
+ * @return {Function}
+ * @api public
+ */
+
+module.exports = function (obj, fn) {
+  if ('string' == typeof fn) fn = obj[fn];
+  if ('function' != typeof fn) throw new Error('bind() requires a function');
+  var args = slice.call(arguments, 2);
+  return function () {
+    return fn.apply(obj, args.concat(slice.call(arguments)));
+  };
+};
+
+/***/ }),
 /* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16209,7 +16209,7 @@ var _dom = __webpack_require__(3);
 
 var _parts = __webpack_require__(10);
 
-var _templateFactory = __webpack_require__(27);
+var _templateFactory = __webpack_require__(29);
 
 var parts = exports.parts = new WeakMap();
 /**
@@ -16336,7 +16336,7 @@ var _component = __webpack_require__(52);
 
 var _component2 = _interopRequireDefault(_component);
 
-var _adapter = __webpack_require__(29);
+var _adapter = __webpack_require__(31);
 
 var _adapter2 = _interopRequireDefault(_adapter);
 
@@ -16344,7 +16344,7 @@ var _foundation = __webpack_require__(53);
 
 var _foundation2 = _interopRequireDefault(_foundation);
 
-var _util = __webpack_require__(30);
+var _util = __webpack_require__(32);
 
 var util = _interopRequireWildcard(_util);
 
@@ -16623,7 +16623,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * THE SOFTWARE.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
 
-var _foundation = __webpack_require__(28);
+var _foundation = __webpack_require__(30);
 
 var _foundation2 = _interopRequireDefault(_foundation);
 
@@ -16788,17 +16788,17 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _foundation = __webpack_require__(28);
+var _foundation = __webpack_require__(30);
 
 var _foundation2 = _interopRequireDefault(_foundation);
 
-var _adapter = __webpack_require__(29);
+var _adapter = __webpack_require__(31);
 
 var _adapter2 = _interopRequireDefault(_adapter);
 
 var _constants = __webpack_require__(54);
 
-var _util = __webpack_require__(30);
+var _util = __webpack_require__(32);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27120,7 +27120,7 @@ function Diagnosis(spec) {
  * Module dependencies.
  */
 
-var parseuri = __webpack_require__(31);
+var parseuri = __webpack_require__(33);
 var debug = __webpack_require__(6)('socket.io-client:url');
 
 /**
@@ -27856,7 +27856,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  */
 
 var isArray = __webpack_require__(19);
-var isBuf = __webpack_require__(32);
+var isBuf = __webpack_require__(34);
 var toString = Object.prototype.toString;
 var withNativeBlob = typeof Blob === 'function' || typeof Blob !== 'undefined' && toString.call(Blob) === '[object BlobConstructor]';
 var withNativeFile = typeof File === 'function' || typeof File !== 'undefined' && toString.call(File) === '[object FileConstructor]';
@@ -28254,12 +28254,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * Module dependencies.
  */
 
-var transports = __webpack_require__(35);
+var transports = __webpack_require__(37);
 var Emitter = __webpack_require__(1);
 var debug = __webpack_require__(9)('engine.io-client:socket');
-var index = __webpack_require__(39);
+var index = __webpack_require__(41);
 var parser = __webpack_require__(2);
-var parseuri = __webpack_require__(31);
+var parseuri = __webpack_require__(33);
 var parseqs = __webpack_require__(7);
 
 /**
@@ -28392,7 +28392,7 @@ Socket.protocol = parser.protocol; // this is an int
 
 Socket.Socket = Socket;
 Socket.Transport = __webpack_require__(22);
-Socket.transports = __webpack_require__(35);
+Socket.transports = __webpack_require__(37);
 Socket.parser = __webpack_require__(2);
 
 /**
@@ -29023,7 +29023,7 @@ try {
  */
 
 var XMLHttpRequest = __webpack_require__(21);
-var Polling = __webpack_require__(36);
+var Polling = __webpack_require__(38);
 var Emitter = __webpack_require__(1);
 var inherit = __webpack_require__(8);
 var debug = __webpack_require__(9)('engine.io-client:polling-xhr');
@@ -30183,7 +30183,7 @@ function coerce(val) {
  * Module requirements.
  */
 
-var Polling = __webpack_require__(36);
+var Polling = __webpack_require__(38);
 var inherit = __webpack_require__(8);
 
 /**
@@ -30416,7 +30416,7 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
     this.iframe.onload = complete;
   }
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(35)))
 
 /***/ }),
 /* 79 */
@@ -30433,7 +30433,7 @@ var Transport = __webpack_require__(22);
 var parser = __webpack_require__(2);
 var parseqs = __webpack_require__(7);
 var inherit = __webpack_require__(8);
-var yeast = __webpack_require__(38);
+var yeast = __webpack_require__(40);
 var debug = __webpack_require__(9)('engine.io-client:websocket');
 var BrowserWebSocket, NodeWebSocket;
 if (typeof self === 'undefined') {
@@ -30867,7 +30867,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Record = Record;
 
-var _storage = __webpack_require__(43);
+var _storage = __webpack_require__(23);
 
 var _geo = __webpack_require__(5);
 
@@ -30879,7 +30879,7 @@ var _socket2 = _interopRequireDefault(_socket);
 
 var _litHtml = __webpack_require__(0);
 
-var _luxon = __webpack_require__(44);
+var _luxon = __webpack_require__(24);
 
 var _template = __webpack_require__(85);
 
@@ -31021,7 +31021,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Replay = Replay;
 
-var _storage = __webpack_require__(43);
+var _storage = __webpack_require__(23);
 
 var _geo = __webpack_require__(5);
 
@@ -31037,7 +31037,7 @@ var _litHtml = __webpack_require__(0);
 
 var _pixelmatch = __webpack_require__(87);
 
-var _luxon = __webpack_require__(44);
+var _luxon = __webpack_require__(24);
 
 var _template = __webpack_require__(88);
 
@@ -31518,11 +31518,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Data = Data;
 
-var _storage = __webpack_require__(43);
+var _storage = __webpack_require__(23);
 
 var _litHtml = __webpack_require__(0);
 
-var _luxon = __webpack_require__(44);
+var _luxon = __webpack_require__(24);
 
 var _template = __webpack_require__(92);
 
