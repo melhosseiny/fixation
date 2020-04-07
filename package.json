@@ -1,6 +1,9 @@
 {
   "name": "fixation",
   "version": "0.0.1",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "start": "node  --experimental-modules app.mjs",
     "build": "webpack -p",
@@ -40,6 +43,7 @@
     "node-sass": "^4.13.1",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
-    "webpack": "^3.12.0"
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   }
 }
