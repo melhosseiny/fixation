@@ -3,13 +3,11 @@ import {render} from 'lit-html';
 import {template} from './template.js'
 
 export function Lost(spec) {
-  render(template(), document.getElementById("view"));
-
-  let dummy = function() {
-    return;
+  let init = () => {
+    render(template(spec), document.getElementById("view"));
   }
 
-  return Object.freeze({
-    dummy
-  });
+  init();
+
+  return Object.freeze({});
 }

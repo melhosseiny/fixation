@@ -38,12 +38,19 @@ let getFileInfo = function(data) {
 
 let getUsage = function(data) {
   console.log("getUsage", data);
+
   if (!data.usage) {
     return html``
   } else {
+    const { quota, usage, usageDetails } = data.usage;
+
+    const quotaInMib = Math.round(quota / (1024 * 1024));
+    const usageInMib = Math.round(usage / (1024 * 1024));
+    const percentUsed = Math.round(usage / quota * 100);
+
     return html`
-      <div>Quota: ${data.usage.quota}</div>
-      <div>Usage: ${data.usage.usage} (${data.usage.usageDetails.caches} caches)</div>
+      <div>Quota: ${quotaInMib} Mib</div>
+      <div>Usage: ${usageInMib} Mib (${percentUsed}%)</div>
     `
   }
 }

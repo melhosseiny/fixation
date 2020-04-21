@@ -5,7 +5,7 @@ import {Fixation, GazePoint, GazeWindow} from '../eye.js';
 import {FIXATION_COLOR, SACCADE_COLOR} from '../color.js';
 
 import io from 'socket.io-client';
-import {render} from 'lit-html';
+import {render as renderTmpl} from 'lit-html';
 import {pixelmatch} from 'pixelmatch';
 import {DateTime, Duration} from 'luxon';
 
@@ -33,12 +33,7 @@ export function Replay(spec) {
     heatmapVisible = !heatmapVisible;
   }
 
-  let playing = false;
-  let max = 1000;
-  let position = 0;
   let firstTimestamp = undefined;
-  let time = '00:00:00';
-  let totalTime = '--:--:--';
   let requestId = undefined;
 
   let fps = REPLAY_FPS;
@@ -48,45 +43,64 @@ export function Replay(spec) {
   let delta = undefined;
 
   let play = function() {
-    console.log("playing", playing);
-    if (playing) {
+    console.log("playing", spec.playing);
+    if (spec.playing) {
       cancelAnimationFrame(requestId);
     } else {
       requestId = requestAnimationFrame(replay);
     }
-    playing = !playing;
-    render(template({play: play, playing: playing, position: position, time: time, totalTime: totalTime, max: max, seek: seek, seekStyle: seekStyle(), showHeatmap: showHeatmap}), document.getElementById("view"));
+    spec.playing = !spec.playing;
+    render(spec);
   }
 
   let seekStyle = function() {
-    return "background-image:-webkit-linear-gradient(left, #b91f1f " + position/max*100 + "%, #a5a5a5 " + position/max*100 + "%, #a5a5a5 " + (frames.length+position)/max*100 + "%, #757575 " + (frames.length+position)/max*100 + "%)";
+    return "background-image:-webkit-linear-gradient(left, #b91f1f " + spec.position/spec.max*100 + "%, #a5a5a5 " + spec.position/spec.max*100 + "%, #a5a5a5 " + (frames.length+spec.position)/spec.max*100 + "%, #757575 " + (frames.length+spec.position)/spec.max*100 + "%)";
   }
 
   let seek = function() {
-    let prevPosition = position;
-    position = +document.getElementById("seek").value;
-    console.log(prevPosition, position);
+    let prevPosition = spec.position;
+    spec.position = +document.getElementById("seek").value;
+    console.log(prevPosition, spec.position);
     heatmap.reset();
-    if (position < prevPosition) {
+    if (spec.position < prevPosition) {
       frames = [];
-      load(position);
-    } else if (position > prevPosition){
-      let diff = position - prevPosition;
+      load(spec.position);
+    } else if (spec.position > prevPosition){
+      let diff = spec.position - prevPosition;
       Array(diff).fill().forEach(function() { frames.shift(); });
     }
-    render(template({play: play, playing: playing, position: position, time: time, totalTime: totalTime, max: max, seek: seek, seekStyle: seekStyle(), showHeatmap: showHeatmap}), document.getElementById("view"));
+    render(spec);
   }
 
-  render(template({play: play, playing: playing, position: position, time: time, totalTime: totalTime, max: max, seek: seek, seekStyle: seekStyle(), showHeatmap: showHeatmap}), document.getElementById("view"));
+  let render = data => {
+    renderTmpl(template({...data, seekStyle: seekStyle()}), document.getElementById('view'));
+  }
+
+  let init = () => {
+    Object.assign(spec, {
+      playing: false,
+      position: 0,
+      time: '00:00:00',
+      totalTime: '--:--:--',
+      max: 1000,
+      play,
+      seek,
+      seekStyle: seekStyle(),
+      showHeatmap
+    });
+    render(spec);
+  }
+
+  init();
 
   let replay = function() {
-    if (position === max) {
+    if (spec.position === spec.max) {
       console.log("no frame");
-      playing = !playing;
-      position = 0;
-      load(position);
-      time = Duration.fromMillis(0).toFormat("hh:mm:ss");
-      render(template({play: play, playing: playing, position: position, time: time, totalTime: totalTime, max: max, seek: seek, seekStyle: seekStyle(), showHeatmap: showHeatmap}), document.getElementById("view"));
+      spec.playing = !spec.playing;
+      spec.position = 0;
+      load(spec.position);
+      spec.time = Duration.fromMillis(0).toFormat("hh:mm:ss");
+      render(spec);
       return;
     }
 
@@ -123,27 +137,27 @@ export function Replay(spec) {
           prevFixation = fixation;
 
           if (heatmapVisible) { heatmap.render(context); }
-          time = Duration.fromMillis((frame.timestamp - firstTimestamp)).toFormat("hh:mm:ss");
-          position++;
+          spec.time = Duration.fromMillis((frame.timestamp - firstTimestamp)).toFormat("hh:mm:ss");
+          spec.position++;
         }
         img.src = frame.img;
       }
-      render(template({play: play, playing: playing, position: position, time: time, totalTime: totalTime, max: max, seek: seek, seekStyle: seekStyle(), showHeatmap: showHeatmap}), document.getElementById("view"));
+      render(spec);
     }
     requestId = requestAnimationFrame(replay);
   }
 
   let load = function(start) {
-    for (let frame=start; frame <= max; frame++) {
+    for (let frame=start; frame <= spec.max; frame++) {
       storage.get(frame, (v) => {
         if (v) {
           frames.push(v);
           //console.log(frames.length);
-          if (frames.length === max) {
-            totalTime = Duration.fromMillis((frames[max-1].timestamp - frames[0].timestamp)).toFormat("hh:mm:ss");
+          if (frames.length === spec.max) {
+            spec.totalTime = Duration.fromMillis((frames[spec.max-1].timestamp - frames[0].timestamp)).toFormat("hh:mm:ss");
             firstTimestamp = frames[0].timestamp;
           }
-          render(template({play: play, playing: playing, position: position, time: time, totalTime: totalTime, max: max, seek: seek, seekStyle: seekStyle(), showHeatmap: showHeatmap}), document.getElementById("view"));
+          render(spec);
         }
       });
     }
@@ -163,8 +177,8 @@ export function Replay(spec) {
     worker.onerror = function(e) { console.log("onerror", e); }
 
     storage.getKeys("gaze", (keys) => {
-      max = keys.length;
-      console.log("max", max);
+      spec.max = keys.length;
+      console.log("max", spec.max);
       load(0);
     });
 

@@ -1,6 +1,6 @@
 import {Storage} from '../storage.js';
 
-import {render} from 'lit-html';
+import {render as renderTmpl} from 'lit-html';
 import {DateTime, Duration} from 'luxon';
 
 import {template} from './template.js'
@@ -8,12 +8,6 @@ import {template} from './template.js'
 export function Data(spec) {
   let storage = Storage({});
   let frames = [];
-
-  const data = {
-    max: 1000,
-    exportData: exportData,
-    deleteData: deleteData
-  }
 
   function download(content, fileName, contentType) {
     var a = document.createElement("a");
@@ -35,14 +29,14 @@ export function Data(spec) {
   }
 
   let load = function(start) {
-    for (let frame=start; frame <= data.max; frame++) {
+    for (let frame=start; frame <= spec.max; frame++) {
       storage.get(frame, (v) => {
         if (v) {
           frames.push(v);
           //console.log(frames.length);
-          if (frames.length === data.max) {
-            data.totalTime = Duration.fromMillis((frames[data.max-1].timestamp - frames[0].timestamp)).toFormat("hh:mm:ss");
-            render(template(data), document.getElementById("view"));
+          if (frames.length === spec.max) {
+            spec.totalTime = Duration.fromMillis((frames[spec.max-1].timestamp - frames[0].timestamp)).toFormat("hh:mm:ss");
+            render(spec);
             console.log("max reached");
           }
         }
@@ -58,7 +52,7 @@ export function Data(spec) {
 
     let files = evt.dataTransfer.files; // FileList object.
     let file = files[0];
-    data.f = file;
+    spec.f = file;
 
     let reader = new FileReader();
 
@@ -81,13 +75,13 @@ export function Data(spec) {
       if (e.lengthComputable) {
         const percentLoaded = Math.round((e.loaded / e.total) * 100);
         console.log(percentLoaded);
-        data.progress = percentLoaded;
-        render(template(data), document.getElementById("view"));
+        spec.progress = percentLoaded;
+        render(spec);
       }
     }
 
     reader.readAsText(file);
-    render(template(data), document.getElementById("view"));
+    render(spec);
   }
 
   let handleDragOver = function(evt) {
@@ -103,15 +97,30 @@ export function Data(spec) {
     evt.preventDefault();
   }
 
+  let render = data => {
+    renderTmpl(template(data), document.getElementById('view'));
+  }
+
+  let init = () => {
+    Object.assign(spec, {
+      max: 1000,
+      exportData,
+      deleteData
+    });
+    render(spec);
+  }
+
+  init();
+
   let connect = async function(context) {
-    render(template(data), document.getElementById("view"));
+    render(spec);
     const usage = await storage.usage();
     console.log("usage", usage);
-    data.usage = usage;
+    spec.usage = usage;
     storage.getKeys("gaze", (keys) => {
-      data.max = keys.length;
-      render(template(data), document.getElementById("view"));
-      console.log("max", data.max);
+      spec.max = keys.length;
+      render(spec);
+      console.log("max", spec.max);
       load(0);
     });
 
@@ -123,7 +132,6 @@ export function Data(spec) {
   }
 
   let disconnect = function() {
-    //socket.disconnect();
     console.log("disconnect from data");
   }
 

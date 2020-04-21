@@ -4,7 +4,7 @@ import {INIT_FIXATION_WINDOW} from '../eye.js';
 import {Fixation, GazePoint, GazeWindow} from '../eye.js'
 
 import io from 'socket.io-client';
-import {render} from 'lit-html';
+import {render as renderTmpl} from 'lit-html';
 import {DateTime, Duration} from 'luxon';
 
 import {template} from './template.js'
@@ -19,21 +19,31 @@ export function Record(spec) {
   let fixationWindow = INIT_FIXATION_WINDOW;
   let storage = Storage({});
 
-  let recording = false;
   let start = undefined;
-  let elapsed = undefined;
 
   let toggleRecord = function() {
-    if (!recording) {
+    if (!spec.recording) {
       start = DateTime.local();
     } else {
-      elapsed = DateTime.local().diff(start).toFormat("hh:mm:ss");
+      spec.elapsed = DateTime.local().diff(start).toFormat("hh:mm:ss");
     }
-    recording = !recording;
-    render(template({toggleRecord: toggleRecord, recording: recording, elapsed: elapsed}), document.getElementById("view"));
+    spec.recording = !spec.recording;
+    render(spec);
   }
 
-  render(template({toggleRecord: toggleRecord, recording: recording}), document.getElementById("view"));
+  let render = data => {
+    renderTmpl(template(data), document.getElementById('view'));
+  }
+
+  let init = () => {
+    Object.assign(spec, {
+      toggleRecord,
+      recording: false,
+    });
+    render(spec);
+  }
+
+  init();
 
   let connect = function(context) {
     let offscreenCanvas = document.createElement('canvas');
@@ -47,7 +57,7 @@ export function Record(spec) {
     socket.on('news', function (data) {
       data.X = data.X / DEVICE_WIDTH;
       data.Y = data.Y / DEVICE_HEIGHT;
-      if (recording) {
+      if (spec.recording) {
         let gp = GazePoint({x: data.X, y: data.Y, t: data.Timestamp});
         dataPoints.push(gp);
         if (dataPoints.length === fixationWindow) {

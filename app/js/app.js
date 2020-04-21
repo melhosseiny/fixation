@@ -6,14 +6,11 @@ import {MDCDrawer} from "@material/drawer";
 import {MDCTopAppBar} from "@material/top-app-bar";
 import {MDCSwitch} from '@material/switch';
 
-import {Diagnosis} from './diagnosis/diagnosis.js';
-import {Record} from './record/record.js';
-import {Replay} from './replay/replay.js';
-import {Lost} from './lost/lost.js';
-import {Data} from './data/data.js';
-
 const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
-const topAppBar = MDCTopAppBar.attachTo(document.getElementById('app-bar'));
+
+const topAppBarElement = document.querySelector('.mdc-top-app-bar');
+const topAppBar = new MDCTopAppBar(topAppBarElement);
+
 topAppBar.setScrollTarget(document.getElementById('view'));
 topAppBar.listen('MDCTopAppBar:nav', () => {
   drawer.open = !drawer.open;
@@ -48,15 +45,17 @@ let navigate = function(path) {
   render(template({title: toTitleCase(page)}), document.getElementsByClassName("mdc-top-app-bar__title")[0]);
 }
 
-const loadPage = function(page) {
+const loadPage = async function(page) {
   switch(page) {
     case 'diagnosis':
+      const {Diagnosis} = await import('./diagnosis/diagnosis.js');
       let diagnosis = Diagnosis({});
       active = diagnosis;
       let modeControl = new MDCSwitch(document.querySelector('.mdc-switch'));
       diagnosis.connect(document.getElementById('a').getContext('2d'));
       break;
     case 'record':
+      const {Record} = await import('./record/record.js');
       let record = Record({});
       active = record;
       record.connect();
@@ -72,17 +71,20 @@ const loadPage = function(page) {
         });
       break;
     case 'replay':
+      const {Replay} = await import('./replay/replay.js');
       let replay = Replay({});
       active = replay;
       let heatmapControl = new MDCSwitch(document.querySelector('.mdc-switch'));
       replay.connect(document.getElementById('a').getContext('2d'));
       break;
     case 'data':
+      const {Data} = await import('./data/data.js');
       let data = Data({});
       active = data;
       data.connect();
       break;
     default:
+      const {Lost} = await import('./lost/lost.js');
       page = 'view404';
       let lost = Lost({});
   }

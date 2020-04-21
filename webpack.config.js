@@ -1,9 +1,11 @@
 const autoprefixer = require('autoprefixer');
+const path = require('path');
 
 module.exports = {
   entry: ['./app/css/app.scss', './app/js/app.js'],
   output: {
-    filename: 'public/bundle.js',
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'public')
   },
   module: {
     rules: [
@@ -13,7 +15,7 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: 'public/bundle.css',
+              name: 'bundle.css',
             },
           },
           {loader: 'extract-loader'},
@@ -26,7 +28,9 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              includePaths: ['./node_modules'],
+              sassOptions: {
+                includePaths: ['./node_modules'],
+              },
             },
           }
         ],
@@ -34,10 +38,6 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        query: {
-          presets: ['es2015'],
-          plugins: ['transform-object-assign']
-        },
       }
     ],
   },

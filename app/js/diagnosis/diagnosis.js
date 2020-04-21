@@ -1,12 +1,12 @@
 import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../geo.js';
-import {Point, Points, Line, Circle, Rect, Heatmap, Ease} from '../geo.js';
+import {Point, Points, Line, Circle, Rect, Ease} from '../geo.js';
 import {INIT_FIXATION_WINDOW} from '../eye.js';
 import {Fixation, GazePoint, GazeWindow} from '../eye.js';
 import {RAW_DATA_COLOR, FIXATION_COLOR, SACCADE_COLOR} from '../color.js';
 import {Algorithm} from '../algorithm.js';
 
 import io from 'socket.io-client';
-import {render} from 'lit-html';
+import {render as renderTmpl} from 'lit-html';
 
 import {template} from './template.js'
 
@@ -111,7 +111,7 @@ export function Diagnosis(spec) {
   }
 
   let calibrate = function() {
-    render(template({setMode: setMode, calibrate: calibrate}), document.getElementById("view"));
+    render(spec);
     let context = document.getElementById('a').getContext('2d');
     calibrating = true;
     context.canvas.focus();
@@ -132,7 +132,19 @@ export function Diagnosis(spec) {
     context.restore()
   }
 
-  render(template({setMode: setMode, calibrate: calibrate}), document.getElementById("view"));
+  let render = data => {
+    renderTmpl(template(data), document.getElementById('view'));
+  }
+
+  let init = () => {
+    Object.assign(spec, {
+      setMode,
+      calibrate
+    });
+    render(spec);
+  }
+
+  init();
 
   let connect = function(context) {
     socket = io.connect('http://localhost');

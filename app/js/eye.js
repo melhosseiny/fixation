@@ -41,7 +41,6 @@ export function Fixation(spec = {x: 0, y: 0, t: 0, d: 0}) {
   })
 }
 
-
 export function GazeWindow(spec = {points: []}) {
   let {points} = spec;
 
