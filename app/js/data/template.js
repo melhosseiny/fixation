@@ -14,11 +14,12 @@ export const template = (data) => html`
         ${getUsage(data)}
       </div>
       <div class="mdc-layout-grid__cell--span-4">
-        <button @click="${data.exportData}" class="mdc-button mdc-button--unelevated record-button">
-          <span class="mdc-button__label">Export</span>
+        <button @click="${data.exportData}" class="mdc-button mdc-button--unelevated">
+          <span class="mdc-button__label">Export JSON</span>
         </button>
-        <button @click="${data.deleteData}" class="mdc-button mdc-button--unelevated record-button">
-          <span class="mdc-button__label">Clear</span>
+        <button @click="${data.deleteData}" class="mdc-button mdc-button--unelevated">
+          <i class="material-icons mdc-button__icon" aria-hidden="true">delete</i>
+          <span class="mdc-button__label">Clear Cache</span>
         </button>
       </div>
     </div>
@@ -49,8 +50,17 @@ let getUsage = function(data) {
     const percentUsed = Math.round(usage / quota * 100);
 
     return html`
-      <div>Quota: ${quotaInMib} Mib</div>
       <div>Usage: ${usageInMib} Mib (${percentUsed}%)</div>
+      <div role="progressbar" class="mdc-linear-progress" aria-label="Example Progress Bar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
+        <div class="mdc-linear-progress__buffer"></div>
+        <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+          <span class="mdc-linear-progress__bar-inner"></span>
+        </div>
+        <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+          <span class="mdc-linear-progress__bar-inner"></span>
+        </div>
+      </div>
+      <div>Quota: ${quotaInMib} Mib</div>
     `
   }
 }

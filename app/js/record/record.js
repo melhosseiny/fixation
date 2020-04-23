@@ -3,11 +3,56 @@ import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../geo.js';
 import {INIT_FIXATION_WINDOW} from '../eye.js';
 import {Fixation, GazePoint, GazeWindow} from '../eye.js'
 
+import {MDCSnackbar} from '@material/snackbar';
+
+const snackbar = MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
+
 import io from 'socket.io-client';
 import {render as renderTmpl} from 'lit-html';
 import {DateTime, Duration} from 'luxon';
 
 import {template} from './template.js'
+
+function WorkerPool(spec = {n: 10}) {
+  let {n} = spec;
+  let workers = new Array(n);
+  let load = new Array(n);
+
+  let init = function() {
+    workers.fill(undefined);
+    load.fill(0);
+    for (let i = 0; i < workers.length; i++) {
+      workers[i] = new Worker('/storage.js');
+
+      workers[i].onmessage = function(e) {
+        //console.log("onmessage load", e.data);
+        load[i] = e.data;
+        //console.log(load);
+      }
+    }
+  }
+
+  let getWorkerWithMinLoad = function() {
+    let minIndex = 0;
+    for (let i = 0; i < load.length; i++) {
+      if (load[i] < load[minIndex]) {
+        minIndex = i;
+      }
+    }
+    //console.log(minIndex, load);
+    return workers[minIndex];
+  }
+
+  let terminateAll = function() {
+    workers.forEach(worker => worker.terminate());
+  }
+
+  return Object.freeze({
+    init,
+    getWorkerWithMinLoad,
+    terminateAll
+  })
+}
 
 export function Record(spec) {
   let socket = undefined;
@@ -39,6 +84,8 @@ export function Record(spec) {
     Object.assign(spec, {
       toggleRecord,
       recording: false,
+      connected: false,
+      id: 0
     });
     render(spec);
   }
@@ -51,9 +98,22 @@ export function Record(spec) {
     offscreenCanvas.height = 720;
     let offscreenContext = offscreenCanvas.getContext('2d');
 
-    let worker = new Worker("/storage.js");
+    let workerPool = WorkerPool();
+    workerPool.init();
 
     socket = io.connect('http://localhost');
+
+    socket.on('connect', function() {
+      spec.connected = true;
+      render(spec);
+      console.log('eye connect')
+    })
+
+    socket.on('disconnect', function() {
+      workerPool.terminateAll();
+      console.log('terminated all workers');
+    })
+
     socket.on('news', function (data) {
       data.X = data.X / DEVICE_WIDTH;
       data.Y = data.Y / DEVICE_HEIGHT;
@@ -67,11 +127,10 @@ export function Record(spec) {
 
             offscreenContext.drawImage(document.getElementById('player'),0,0,offscreenContext.canvas.width,offscreenContext.canvas.height);
             let pxls = offscreenContext.getImageData(0,0,offscreenContext.canvas.width,offscreenContext.canvas.height);
-            //console.log(pxls);
-            //console.log(JSON.stringify({x: fixation.getX(), y: fixation.getY(), img: offscreenContext.canvas.toDataURL('image/webp', 0.5).length  }));
-            //console.log("timestamp", fixation.getTimestamp());
-            worker.postMessage({x: fixation.getX(), y: fixation.getY(), timestamp: fixation.getTimestamp(), pxls: pxls.data.buffer}, [pxls.data.buffer]);
-            //storage.put(JSON.stringify({x: fixation.getX(), y: fixation.getY(), img: context.canvas.toDataURL('image/webp', 0.5)}));
+
+            workerPool.getWorkerWithMinLoad().postMessage({x: fixation.getX(), y: fixation.getY(), id: spec.id, timestamp: fixation.getTimestamp(), pxls: pxls.data.buffer}, [pxls.data.buffer]);
+            spec.id++;
+
             if (fixationCount === 20) {
               fixationCount = 0;
             }
@@ -91,6 +150,11 @@ export function Record(spec) {
           }
         }
       }
+    });
+
+    socket.on('connect_error', err => {
+      snackbar.labelText = 'Can\'t connect to eye tracker.';
+      snackbar.open();
     });
   }
 

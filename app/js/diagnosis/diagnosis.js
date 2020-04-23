@@ -5,6 +5,10 @@ import {Fixation, GazePoint, GazeWindow} from '../eye.js';
 import {RAW_DATA_COLOR, FIXATION_COLOR, SACCADE_COLOR} from '../color.js';
 import {Algorithm} from '../algorithm.js';
 
+import {MDCSnackbar} from '@material/snackbar';
+
+const snackbar = MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
+
 import io from 'socket.io-client';
 import {render as renderTmpl} from 'lit-html';
 
@@ -147,6 +151,7 @@ export function Diagnosis(spec) {
   init();
 
   let connect = function(context) {
+    Rect({x: 0, y: 0, width: context.canvas.width, height: context.canvas.height}).clear(context);
     socket = io.connect('http://localhost');
     socket.on('news', function (data) {
       data.X = data.X / DEVICE_WIDTH;
@@ -199,6 +204,11 @@ export function Diagnosis(spec) {
         Points({points: gazeHistory}).renderTimeline(gazeYCtx, 1, RAW_DATA_COLOR);
       }
     });
+
+    socket.on('connect_error', err => {
+      snackbar.labelText = 'Can\'t connect to eye tracker.';
+      snackbar.open();
+    })
   }
 
   let disconnect = function() {

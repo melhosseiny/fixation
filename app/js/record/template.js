@@ -15,10 +15,10 @@ export const template = (data) => html`
 `;
 
 let getRecordButton = function(data) {
-  console.log("inspect", data.recording)
+  //console.log("inspect", data.recording)
   if (!data.recording) {
     return html`
-      <button @click="${data.toggleRecord}" class="mdc-button mdc-button--unelevated record-button">
+      <button @click="${data.toggleRecord}" ?disabled="${!data.connected}" class="mdc-button mdc-button--unelevated record-button">
         <i class="material-icons mdc-button__icon" aria-hidden="true">fiber_manual_record</i>
         <span class="mdc-button__label">Record</span>
       </button>`

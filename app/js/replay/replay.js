@@ -4,6 +4,10 @@ import {REPLAY_FPS} from '../eye.js';
 import {Fixation, GazePoint, GazeWindow} from '../eye.js';
 import {FIXATION_COLOR, SACCADE_COLOR} from '../color.js';
 
+import {MDCSnackbar} from '@material/snackbar';
+
+const snackbar = MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
+
 import io from 'socket.io-client';
 import {render as renderTmpl} from 'lit-html';
 import {pixelmatch} from 'pixelmatch';
@@ -24,7 +28,7 @@ export function Replay(spec) {
   let surface = Rect({x: 0, y: 0, width: 1280, height: 720});
   let tiles = surface.tiles().map(t => Rect(t));
   let heatmap = Heatmap({tiles: tiles});
-  let context = context;
+  let context;
   let frames = [];
 
   let heatmapVisible = false;
@@ -78,6 +82,7 @@ export function Replay(spec) {
 
   let init = () => {
     Object.assign(spec, {
+      loaded: false,
       playing: false,
       position: 0,
       time: '00:00:00',
@@ -157,6 +162,7 @@ export function Replay(spec) {
             spec.totalTime = Duration.fromMillis((frames[spec.max-1].timestamp - frames[0].timestamp)).toFormat("hh:mm:ss");
             firstTimestamp = frames[0].timestamp;
           }
+          spec.loaded = true;
           render(spec);
         }
       });
@@ -178,6 +184,10 @@ export function Replay(spec) {
 
     storage.getKeys("gaze", (keys) => {
       spec.max = keys.length;
+      if (spec.max === 0) {
+        snackbar.labelText = 'No data found. Record or import new data.';
+        snackbar.open();
+      }
       console.log("max", spec.max);
       load(0);
     });
@@ -226,10 +236,7 @@ export function Replay(spec) {
     //}
   }
 
-  let disconnect = function() {
-    //socket.disconnect();
-    console.log("disconnect from replay");
-  }
+  let disconnect = () => {};
 
   return Object.freeze({
     connect,

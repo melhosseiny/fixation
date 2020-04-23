@@ -16,6 +16,36 @@ $mdc-typography-font-family: "Lekton";
 @import "@material/typography/mdc-typography";
 @import "@material/switch/mdc-switch";
 @import "@material/icon-button/mdc-icon-button";
+@import "@material/snackbar/mdc-snackbar";
+@import "@material/linear-progress/mdc-linear-progress";
+
+:root {
+  --mdc-layout-grid-margin-desktop: 12px;
+  --mdc-layout-grid-margin-tablet: 12px;
+  --mdc-layout-grid-margin-phone: 4px;
+}
+
+.mdc-button {
+  @include mdc-button-disabled-icon-color($color: rgba(255,255,255,0.25));
+  @include mdc-button-disabled-ink-color($color: rgba(255,255,255,0.25));
+}
+
+.mdc-icon-button {
+  @include mdc-icon-button-disabled-ink-color($color: rgba(255,255,255,0.25));
+}
+
+.mdc-top-app-bar {
+  @include mdc-top-app-bar-fill-color($color: transparent);
+}
+
+.mdc-snackbar {
+  @include mdc-snackbar-fill-color($color: #41b6a3);
+}
+
+.mdc-linear-progress {
+  @include mdc-linear-progress-bar-color($color: #41b6a3);
+  @include mdc-linear-progress-buffer-color($color: rgba(65, 182, 163, 0.25));
+}
 
 body {
   background-color: #232323;

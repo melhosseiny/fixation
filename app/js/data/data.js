@@ -3,7 +3,11 @@ import {Storage} from '../storage.js';
 import {render as renderTmpl} from 'lit-html';
 import {DateTime, Duration} from 'luxon';
 
-import {template} from './template.js'
+import {template} from './template.js';
+
+import { MDCLinearProgress } from '@material/linear-progress';
+
+let linearProgress;
 
 export function Data(spec) {
   let storage = Storage({});
@@ -25,6 +29,7 @@ export function Data(spec) {
   let deleteData = function() {
     storage.clear("gaze", (deleted) => {
       console.log("cache deleted", deleted);
+      render(spec);
     });
   }
 
@@ -62,11 +67,11 @@ export function Data(spec) {
       deleteData();
       data.forEach((document, id) => {
         caches.open('gaze').then((cache) => {
-          const options = {
+          /*const options = {
             headers: {
               'Content-Type': 'application/json'
             }
-          }
+          }*/
           cache.put('/gaze/' + id, new Response(JSON.stringify(document)));
         })
       })
@@ -104,6 +109,7 @@ export function Data(spec) {
   let init = () => {
     Object.assign(spec, {
       max: 1000,
+      totalTime: '--:--:--',
       exportData,
       deleteData
     });
@@ -113,10 +119,17 @@ export function Data(spec) {
   init();
 
   let connect = async function(context) {
-    render(spec);
     const usage = await storage.usage();
     console.log("usage", usage);
     spec.usage = usage;
+
+    render(spec);
+
+    linearProgress = MDCLinearProgress.attachTo(document.querySelector('.mdc-linear-progress'));
+    linearProgress.progress = usage.usage / usage.quota;
+
+    console.log(usage.usage / usage.quota);
+
     storage.getKeys("gaze", (keys) => {
       spec.max = keys.length;
       render(spec);
