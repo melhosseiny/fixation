@@ -2,7 +2,7 @@ import {Storage} from '../storage.js'
 import {DEVICE_WIDTH, DEVICE_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT, Rect, Points, Point} from '../geo.js';
 import {INIT_FIXATION_WINDOW} from '../eye.js';
 import {Fixation, GazePoint, GazeWindow} from '../eye.js'
-import {RAW_DATA_COLOR} from '../color.js';
+import {LOW_LOAD_COLOR, MEDIUM_LOAD_COLOR, HIGH_LOAD_COLOR} from '../color.js';
 
 import {MDCSnackbar} from '@material/snackbar';
 
@@ -21,18 +21,6 @@ function WorkerPool(spec = {n: 10}) {
 
 
   let loadCtx = document.getElementById('load').getContext('2d');
-  spec.workerStatus = {
-    n,
-    active: 3,
-    load: [0,1,2,3,3,4,1,7,9,8]
-  }
-
-  Rect({x: 0, y: 0, width: loadCtx.canvas.width, height: loadCtx.canvas.height}).clear(loadCtx);
-
-  const maxLoad = Math.max(10, ...spec.workerStatus.load);
-  Points({points: spec.workerStatus.load.map((l,i) => Point({x: i, y: l / maxLoad}))}).renderTimeline(loadCtx, 1, RAW_DATA_COLOR);
-
-  //renderTmpl(workerStatusTmpl(spec), document.getElementById('worker-status'));
 
   let init = function() {
     workers.fill(undefined);
@@ -55,17 +43,12 @@ function WorkerPool(spec = {n: 10}) {
         minIndex = i;
       }
     }
-    //console.log(minIndex, load);
-    Rect({x: 0, y: 0, width: loadCtx.canvas.width, height: loadCtx.canvas.height}).clear(loadCtx);
 
-    /*spec.workerStatus = {
-      n,
-      active: load.filter(l => l !== 0).length,
-      load: load
-    }*/
     const maxLoad = Math.max(10, ...load);
+    const color = Math.max(...load) > 7.5 ? HIGH_LOAD_COLOR : (Math.max(...load) > 2.5 ? MEDIUM_LOAD_COLOR : LOW_LOAD_COLOR);
+    Rect({x: 0, y: 0, width: loadCtx.canvas.width, height: loadCtx.canvas.height}).clear(loadCtx);
     Points({points: load.map((l,i) => Point({x: i, y: l / maxLoad}))}).renderTimeline(loadCtx, 1, RAW_DATA_COLOR);
-    //renderTmpl(workerStatusTmpl(spec), document.getElementById('worker-status'));
+
     return workers[minIndex];
   }
 
@@ -83,7 +66,6 @@ function WorkerPool(spec = {n: 10}) {
 export function Record(spec) {
   let socket = undefined;
 
-  let lastFixatedEl = undefined;
   let dataPoints = [];
   let fixationCount = 0;
   let prevFixation = undefined;
@@ -161,14 +143,6 @@ export function Record(spec) {
               fixationCount = 0;
             }
 
-            /*let element = document.elementFromPoint(fixation.getX(), fixation.getY());
-            if (element) {
-              if (lastFixatedEl) {
-                lastFixatedEl.classList.remove("fixated");
-              }
-              lastFixatedEl = element;
-              lastFixatedEl.classList.add("fixated");
-            }*/
             dataPoints = [];
             fixationWindow = INIT_FIXATION_WINDOW;
           } else {

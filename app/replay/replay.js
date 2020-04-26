@@ -11,7 +11,6 @@ import {MDCSnackbar} from '@material/snackbar';
 const snackbar = MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
 
 import {render as renderTmpl} from 'lit-html';
-//import {pixelmatch} from 'pixelmatch';
 import {DateTime, Duration} from 'luxon';
 
 import {template} from './template.js'
@@ -249,49 +248,6 @@ export function Replay(spec) {
       console.log("max", spec.max);
       load(0);
     });
-
-    //for (let i=0; i < 200; i++) {
-      //Rect({x: 0, y: 0, width: context.canvas.width, height: context.canvas.height}).clear(context);
-      //let p = Point({x: value.x, y: value.y});
-      //p.render(context, 'rgba(200,0,0,0.85)');
-
-      //if (gazeHistory.length === 30) { gazeHistory.shift(); }
-      //gazeHistory.push(p);
-
-      //Rect({x: 0, y: 0, width: context.canvas.width, height: context.canvas.height}).clear(context);
-      //fixationCount = 0;
-      //fixation = fixation.getFixation();
-      //Circle({x: fixation.x, y: fixation.y, r: 20}).render(context, 'rgba(255,255,255,0.85)');
-
-      //if (prevFixation) {
-      //  Line({x1: prevFixation.x, y1: prevFixation.y, x2: fixation.x, y2: fixation.y}).render(context, 'rgba(255,255,255,0.85)');
-      //}
-      //prevFixation = fixation;
-
-      //for (let i = 0; i < tiles.length; i++) {
-      //  if (tiles[i].containsPoint(fixation.x, fixation.y)) {
-      //    heatmap.setCount(i, heatmap.getCount(i)+1);
-      //  }
-      //}
-
-      //heatmap.render(context);
-
-      //Points({points: gazeHistory}).render(context, 'rgba(200,0,0,0.85)');
-      //tiles.forEach(t => t.render(context, 'rgba(255,255,255,0.85)'));
-
-      //const canvas2 = document.createElement('canvas');
-      //canvas2.width = 100;
-      //canvas2.height = 100;
-      //const context2 = canvas2.getContext('2d');
-
-      //context2.drawImage(document.getElementById('player'), 0, 0, canvas2.width, canvas2.height);
-      //let img2 = undefined;
-      //if (lastImg) {
-      //  img2 = context2.getImageData(0, 0, canvas2.width, canvas2.height);
-        //pixelmatch(lastImg.data, img2.data, null, canvas2.width, canvas2.height, {threshold: 0.1});
-      //}
-      //lastImg = context2.getImageData(0, 0, canvas2.width, canvas2.height);
-    //}
   }
 
   let disconnect = () => {};

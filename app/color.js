@@ -5,6 +5,10 @@ export const FIXATION_COLOR = 'rgba(255,255,255,0.85)';
 export const SACCADE_COLOR = 'rgba(255,255,255,0.85)';
 export const CLEAR_COLOR = 'rgb(0,0,0)';
 
+export const LOW_LOAD_COLOR = 'rgba(0, 200, 0, 0.85)';
+export const MEDIUM_LOAD_COLOR = 'rgba(200, 200, 0, 0.85)';
+export const HIGH_LOAD_COLOR = 'rgba(200, 0, 0, 0.85)';
+
 export const DIFFERENT_COLORS = [];
 export const HEATMAP_COLORS = [];
 

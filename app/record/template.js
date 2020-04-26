@@ -18,12 +18,6 @@ export const template = (data) => html`
   </div>
 `;
 
-/*export const workerStatusTmpl = (data) => html`
-  <div>Total workers: ${data.workerStatus.n}</div>
-  <div>Active workers: ${data.workerStatus.active}</div>
-  <div>Worker load: ${data.workerStatus.load}</div>
-`*/
-
 let getRecordButton = function(data) {
   //console.log("inspect", data.recording)
   if (!data.recording) {
