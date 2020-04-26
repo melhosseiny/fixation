@@ -1,7 +1,8 @@
 import {Storage} from '../storage.js'
-import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../geo.js';
+import {DEVICE_WIDTH, DEVICE_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT, Rect, Points, Point} from '../geo.js';
 import {INIT_FIXATION_WINDOW} from '../eye.js';
 import {Fixation, GazePoint, GazeWindow} from '../eye.js'
+import {RAW_DATA_COLOR} from '../color.js';
 
 import {MDCSnackbar} from '@material/snackbar';
 
@@ -11,12 +12,27 @@ import io from 'socket.io-client';
 import {render as renderTmpl} from 'lit-html';
 import {DateTime, Duration} from 'luxon';
 
-import {template} from './template.js'
+import {template} from './template.js';
 
 function WorkerPool(spec = {n: 10}) {
   let {n} = spec;
   let workers = new Array(n);
   let load = new Array(n);
+
+
+  let loadCtx = document.getElementById('load').getContext('2d');
+  spec.workerStatus = {
+    n,
+    active: 3,
+    load: [0,1,2,3,3,4,1,7,9,8]
+  }
+
+  Rect({x: 0, y: 0, width: loadCtx.canvas.width, height: loadCtx.canvas.height}).clear(loadCtx);
+
+  const maxLoad = Math.max(10, ...spec.workerStatus.load);
+  Points({points: spec.workerStatus.load.map((l,i) => Point({x: i, y: l / maxLoad}))}).renderTimeline(loadCtx, 1, RAW_DATA_COLOR);
+
+  //renderTmpl(workerStatusTmpl(spec), document.getElementById('worker-status'));
 
   let init = function() {
     workers.fill(undefined);
@@ -40,6 +56,16 @@ function WorkerPool(spec = {n: 10}) {
       }
     }
     //console.log(minIndex, load);
+    Rect({x: 0, y: 0, width: loadCtx.canvas.width, height: loadCtx.canvas.height}).clear(loadCtx);
+
+    /*spec.workerStatus = {
+      n,
+      active: load.filter(l => l !== 0).length,
+      load: load
+    }*/
+    const maxLoad = Math.max(10, ...load);
+    Points({points: load.map((l,i) => Point({x: i, y: l / maxLoad}))}).renderTimeline(loadCtx, 1, RAW_DATA_COLOR);
+    //renderTmpl(workerStatusTmpl(spec), document.getElementById('worker-status'));
     return workers[minIndex];
   }
 
@@ -93,10 +119,10 @@ export function Record(spec) {
   init();
 
   let connect = function(context) {
-    let offscreenCanvas = document.createElement('canvas');
-    offscreenCanvas.width = 1280;
-    offscreenCanvas.height = 720;
-    let offscreenContext = offscreenCanvas.getContext('2d');
+    const offscreenCanvas = document.createElement('canvas');
+    offscreenCanvas.width = CANVAS_WIDTH;
+    offscreenCanvas.height = CANVAS_HEIGHT;
+    const offscreenContext = offscreenCanvas.getContext('2d');
 
     let workerPool = WorkerPool();
     workerPool.init();
@@ -128,7 +154,7 @@ export function Record(spec) {
             offscreenContext.drawImage(document.getElementById('player'),0,0,offscreenContext.canvas.width,offscreenContext.canvas.height);
             let pxls = offscreenContext.getImageData(0,0,offscreenContext.canvas.width,offscreenContext.canvas.height);
 
-            workerPool.getWorkerWithMinLoad().postMessage({x: fixation.getX(), y: fixation.getY(), id: spec.id, timestamp: fixation.getTimestamp(), pxls: pxls.data.buffer}, [pxls.data.buffer]);
+            workerPool.getWorkerWithMinLoad().postMessage({x: fixation.getX(), y: fixation.getY(), duration: fixation.getDuration(), id: spec.id, timestamp: fixation.getTimestamp(), pxls: pxls.data.buffer}, [pxls.data.buffer]);
             spec.id++;
 
             if (fixationCount === 20) {

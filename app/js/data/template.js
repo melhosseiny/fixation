@@ -15,9 +15,11 @@ export const template = (data) => html`
       </div>
       <div class="mdc-layout-grid__cell--span-4">
         <button @click="${data.exportData}" class="mdc-button mdc-button--unelevated">
+          <div class="mdc-button__ripple"></div>
           <span class="mdc-button__label">Export JSON</span>
         </button>
         <button @click="${data.deleteData}" class="mdc-button mdc-button--unelevated">
+          <div class="mdc-button__ripple"></div>
           <i class="material-icons mdc-button__icon" aria-hidden="true">delete</i>
           <span class="mdc-button__label">Clear Cache</span>
         </button>

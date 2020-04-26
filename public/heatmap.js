@@ -1,10 +1,12 @@
 //importScripts('bundle.js')
 const DEVICE_WIDTH = 1920;
 const DEVICE_HEIGHT = 1080;
+const CANVAS_WIDTH = 960;
+const CANVAS_HEIGHT = 540;
 const GT_BASE = [30, 15];
 const GT_CONSIDER = [20, 20];
 
-let surface = Rect({x: 0, y: 0, width: 1280, height: 720});
+let surface = Rect({x: 0, y: 0, width: CANVAS_WIDTH, height: CANVAS_HEIGHT});
 let tiles = surface.tiles().map(t => Rect(t));
 
 function Rect(spec = {x: 0, y: 0, width: 0, height: 0}) {
@@ -66,7 +68,7 @@ onmessage = function(e) {
   let gaze = new Float32Array(e.data.gaze);
 
   for (let i = 0; i < tiles.length; i++) {
-    if (tiles[i].containsPoint(gaze[0]*1280, gaze[1]*720)) {
+    if (tiles[i].containsPoint(gaze[0]*CANVAS_WIDTH, gaze[1]*CANVAS_HEIGHT)) {
       count[i] += 1;
     }
   }

@@ -5,6 +5,9 @@ import {Algorithm} from './algorithm.js';
 export const DEVICE_WIDTH = window.screen.width * window.devicePixelRatio;
 export const DEVICE_HEIGHT = window.screen.height * window.devicePixelRatio;
 
+export const CANVAS_WIDTH = DEVICE_WIDTH / 2;
+export const CANVAS_HEIGHT = DEVICE_HEIGHT / 2;
+
 let color = Color({});
 let algorithm = Algorithm({});
 
@@ -40,7 +43,7 @@ export function Points(spec = {points: []}) {
     context.fillStyle = fillStyle;
     points.forEach(function(p, i) {
       let dim = axis === 0? p.getX() : p.getY();
-      context.fillRect((i/30)*context.canvas.width, (1-dim)*context.canvas.height, context.canvas.width/30, 1);
+      context.fillRect((i/points.length)*context.canvas.width, (1-dim)*context.canvas.height, context.canvas.width/points.length, 1);
     })
   }
 
@@ -197,7 +200,9 @@ export function Heatmap(spec = {tiles: []}) {
         }
       });
     }
+  }
 
+  let clone = function() {
     if (count.buffer.byteLength !== 0) {
       countClone = count.slice(0);
     };
@@ -209,7 +214,8 @@ export function Heatmap(spec = {tiles: []}) {
     getCountArr,
     setCountArr,
     reset,
-    render
+    render,
+    clone
   });
 }
 

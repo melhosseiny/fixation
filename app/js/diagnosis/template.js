@@ -1,10 +1,12 @@
 import {html} from 'lit-html';
 
+import {CANVAS_WIDTH, CANVAS_HEIGHT} from '../geo.js';
+
 export const template = (data) => html`
   <div class="mdc-layout-grid">
     <div class="mdc-layout-grid__inner">
       <div class="mdc-layout-grid__cell--span-8">
-        <canvas @click="${fullscreen}" id="a" width="1280" height="720"></canvas>
+        <canvas @click="${fullscreen}" id="a" width="${CANVAS_WIDTH}" height="${CANVAS_HEIGHT}"></canvas>
       </div>
       <div class="mdc-layout-grid__cell--span-4">
         <div class="mdc-switch">
@@ -21,6 +23,7 @@ export const template = (data) => html`
         <canvas id="gaze-y" width="100" height="30"></canvas>
         <h5>Calibration</h5>
         <button @click="${data.calibrate}" class="mdc-button mdc-button--unelevated">
+          <div class="mdc-button__ripple"></div>
           <i class="material-icons mdc-button__icon" aria-hidden="true">adjust</i>
           <span class="mdc-button__label">Inspect calibration</span>
         </button>

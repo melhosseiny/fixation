@@ -1,23 +1,22 @@
 import {Storage} from '../storage.js';
-import {Point, Points, Line, Circle, Rect, Heatmap} from '../geo.js';
+import {CANVAS_WIDTH, CANVAS_HEIGHT, Point, Points, Line, Circle, Rect, Heatmap} from '../geo.js';
 import {REPLAY_FPS} from '../eye.js';
 import {Fixation, GazePoint, GazeWindow} from '../eye.js';
 import {FIXATION_COLOR, SACCADE_COLOR} from '../color.js';
+
+import {Algorithm} from '../algorithm.js';
 
 import {MDCSnackbar} from '@material/snackbar';
 
 const snackbar = MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
 
-import io from 'socket.io-client';
 import {render as renderTmpl} from 'lit-html';
-import {pixelmatch} from 'pixelmatch';
+//import {pixelmatch} from 'pixelmatch';
 import {DateTime, Duration} from 'luxon';
 
 import {template} from './template.js'
 
 export function Replay(spec) {
-  let socket = undefined;
-
   let lastFixatedEl = undefined;
   let lastImg = undefined;
   let gazeHistory = [];
@@ -25,32 +24,37 @@ export function Replay(spec) {
   let fixationCount = 0;
   let prevFixation = undefined;
   let storage = Storage({});
-  let surface = Rect({x: 0, y: 0, width: 1280, height: 720});
+  let surface = Rect({x: 0, y: 0, width: CANVAS_WIDTH, height: CANVAS_HEIGHT});
   let tiles = surface.tiles().map(t => Rect(t));
   let heatmap = Heatmap({tiles: tiles});
   let context;
   let frames = [];
+  let algorithm = Algorithm({});
 
-  let heatmapVisible = false;
+  let toggleShowHeatmap = function() {
+    spec.showHeatmap = !spec.showHeatmap;
+  }
 
-  let showHeatmap = function() {
-    heatmapVisible = !heatmapVisible;
+  let toggleExportToVideo = function() {
+    spec.exportToVideo = !spec.exportToVideo;
+    if (spec.playing) {
+      mediaRecorder.start();
+    }
+    render(spec);
   }
 
   let firstTimestamp = undefined;
   let requestId = undefined;
 
-  let fps = REPLAY_FPS;
-  let now = undefined;
-  let then = Date.now();
-  let interval = 1000/fps;
-  let delta = undefined;
+  let fps;
 
   let play = function() {
     console.log("playing", spec.playing);
     if (spec.playing) {
+      if (spec.exportToVideo) { mediaRecorder.stop(); }
       cancelAnimationFrame(requestId);
     } else {
+      if (spec.exportToVideo) { mediaRecorder.start(); }
       requestId = requestAnimationFrame(replay);
     }
     spec.playing = !spec.playing;
@@ -91,14 +95,20 @@ export function Replay(spec) {
       play,
       seek,
       seekStyle: seekStyle(),
-      showHeatmap
+      showHeatmap: false,
+      exportToVideo: false,
+      toggleShowHeatmap,
+      toggleExportToVideo
     });
     render(spec);
   }
 
   init();
 
-  let replay = function() {
+  let t0;
+  let ti;
+
+  let replay = function(timestamp) {
     if (spec.position === spec.max) {
       console.log("no frame");
       spec.playing = !spec.playing;
@@ -108,13 +118,13 @@ export function Replay(spec) {
       render(spec);
       return;
     }
+    //console.log(timestamp, ti, timestamp - ti, fps, 1000 / fps);
+    if (!t0) {
+      t0 = timestamp;
+      ti = t0;
+    }
 
-    now = Date.now();
-    delta = now - then;
-    if (delta > interval) {
-      then = now - (delta % interval);
-      let context = document.getElementById('a').getContext('2d');
-
+    if (timestamp - ti > 1000 / (8 || (fps*1.5))) {
       let frame = frames.shift();
 
       if (frame) {
@@ -126,29 +136,31 @@ export function Replay(spec) {
         gaze[0] = fixation.getX();
         gaze[1] = fixation.getY();
 
-        if (heatmap.getCountArr().buffer.length !== 0) {
+        if (heatmap.getCountArr().buffer.byteLength !== 0) {
           worker.postMessage({count: count, gaze: gaze_buffer}, [count.buffer, gaze_buffer]);
         }
-        //console.log("value", frame);
-        let img = new Image();
-        img.onload = function() {
-          context.drawImage(img,0,0,1280,720);
+        context.drawImage(frame.preloadedImg, 0, 0, context.canvas.width, context.canvas.height);
+        if (spec.showHeatmap) { heatmap.render(context); }
 
-          Circle({x: fixation.getX(), y: fixation.getY(), r: 20}).render(context, FIXATION_COLOR);
+        let normalizedDuration = algorithm.normalize(frame.duration, 100, 400) * 50;
+        console.log('durationr', normalizedDuration);
+        Circle({x: fixation.getX(), y: fixation.getY(), r: normalizedDuration}).render(context, FIXATION_COLOR);
 
-          if (prevFixation) {
-            Line({x1: prevFixation.getX(), y1: prevFixation.getY(), x2: fixation.getX(), y2: fixation.getY()}).render(context, SACCADE_COLOR);
-          }
-          prevFixation = fixation;
+        //Circle({x: fixation.getX(), y: fixation.getY(), r: 20}).render(context, FIXATION_COLOR);
 
-          if (heatmapVisible) { heatmap.render(context); }
-          spec.time = Duration.fromMillis((frame.timestamp - firstTimestamp)).toFormat("hh:mm:ss");
-          spec.position++;
+        if (prevFixation) {
+          Line({x1: prevFixation.getX(), y1: prevFixation.getY(), x2: fixation.getX(), y2: fixation.getY()}).render(context, SACCADE_COLOR);
         }
-        img.src = frame.img;
+        prevFixation = fixation;
+
+        spec.time = Duration.fromMillis((frame.timestamp - firstTimestamp)).toFormat("hh:mm:ss");
+        spec.position++;
+
+        render(spec);
+        ti = timestamp;
       }
-      render(spec);
     }
+
     requestId = requestAnimationFrame(replay);
   }
 
@@ -161,26 +173,72 @@ export function Replay(spec) {
           if (frames.length === spec.max) {
             spec.totalTime = Duration.fromMillis((frames[spec.max-1].timestamp - frames[0].timestamp)).toFormat("hh:mm:ss");
             firstTimestamp = frames[0].timestamp;
+            //console.log(frames);
+            snackbar.labelText = 'Preloading frames';
+            snackbar.open();
+            preloadImages();
           }
-          spec.loaded = true;
           render(spec);
         }
       });
     }
   }
 
-  let worker = undefined;
+  let preloadImages = () => {
+    for (let i = 0; i < frames.length; i++) {
+      let img = new Image();
+      img.onload = function() {
+        frames[i].preloadedImg = img;
+        //console.log(i, frames.length);
+        if (i === frames.length - 1) {
+          console.log('preloaded all images');
+          frames = frames.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : -1);
+          console.log('sorted all frames');
+          const intrinsicFPS = frames.length * 1000 / (frames[spec.max-1].timestamp - frames[0].timestamp);
+          console.log('intrisic fps', intrinsicFPS);
+          fps = intrinsicFPS;
 
-  let connect = function(context) {
-    context = context;
+          snackbar.labelText = `Preloaded all frames (FPS = ${Math.round(fps * 1.5)})`;
+          snackbar.open();
+
+          spec.loaded = true;
+          render(spec);
+        }
+      }
+      img.src = frames[i].img;
+
+      /*if (frames[i+1] && frames[i+1].timestamp < frames[i].timestamp) {
+        console.log('found 1!!', frames[i+1].timestamp, frames[i].timestamp);
+        console.log('found 1!!', frames[i+1].id, frames[i].id);
+      }*/
+    }
+  }
+
+  let worker = undefined;
+  let mediaRecorder = undefined;
+  let chunks = [];
+
+  let connect = function(c) {
+    context = c;
     Rect({x: 0, y: 0, width: context.canvas.width, height: context.canvas.height}).clear(context);
 
     worker = new Worker("/heatmap.js");
     worker.onmessage = function(e) {
       //console.log("onmessage", e.data);
       heatmap.setCountArr(e.data);
+      heatmap.clone();
     }
     worker.onerror = function(e) { console.log("onerror", e); }
+
+    mediaRecorder = new MediaRecorder(context.canvas.captureStream(30));
+    mediaRecorder.ondataavailable = function(e) {
+      chunks.push(e.data);
+    };
+    mediaRecorder.onstop = function(e) {
+      const video = document.getElementById('captured-video');
+      video.src = URL.createObjectURL(new Blob(chunks, { 'type' : 'video/webm' }));
+      chunks = [];
+    };
 
     storage.getKeys("gaze", (keys) => {
       spec.max = keys.length;

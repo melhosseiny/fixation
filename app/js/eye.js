@@ -4,7 +4,7 @@ export const DISPERSION_THRESHOLD = 50; // pixels
 export const DURATION_THRESHOLD = 150; // ms
 export const INIT_FIXATION_WINDOW = 10; // ~0.15 * 70Hz
 
-export const REPLAY_FPS = 5;
+export const REPLAY_FPS = 12;
 
 export function GazePoint(spec = {x: 0, y: 0, t: 0}) {
   let {x,y,t} = spec

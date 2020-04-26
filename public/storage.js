@@ -1,16 +1,21 @@
+const IMAGE_TYPE = 'image/webm';
+const IMAGE_QUALITY = 0.8;
+
+const CANVAS_WIDTH = 960;
+const CANVAS_HEIGHT = 540;
+
 let load = 0;
+const canvas = new OffscreenCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 
 onmessage = function(e) {
   load++;
   postMessage(load);
   let document = e.data;
 
-  let canvas = new OffscreenCanvas(1280,720);
-  let context = canvas.getContext('2d');
-  context.putImageData(new ImageData(new Uint8ClampedArray(document.pxls), 1280, 720),0,0);
+  canvas.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(document.pxls), CANVAS_WIDTH, CANVAS_HEIGHT), 0, 0);
 
   delete document.pxls;
-  canvas.convertToBlob({type: 'image/webp', quality: 0.5}).then(function(blob) {
+  canvas.convertToBlob({type: IMAGE_TYPE, quality: IMAGE_QUALITY}).then(function(blob) {
     let reader = new FileReader();
     reader.addEventListener('loadend', function() {
       document.img = reader.result;

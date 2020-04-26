@@ -1,10 +1,15 @@
 import {html, render} from 'lit-html';
 import {installRouter} from 'pwa-helpers/router.js';
 
+import {DEVICE_WIDTH, DEVICE_HEIGHT} from './geo.js';
+
 import {MDCRipple} from '@material/ripple/index';
 import {MDCDrawer} from "@material/drawer";
 import {MDCTopAppBar} from "@material/top-app-bar";
 import {MDCSwitch} from '@material/switch';
+import {MDCSnackbar} from '@material/snackbar';
+
+const snackbar = MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
 
 const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
 
@@ -62,11 +67,19 @@ const loadPage = async function(page) {
 
       const player = document.getElementById('player');
 
-      navigator.mediaDevices.getDisplayMedia({video: true})
+      navigator.mediaDevices.getDisplayMedia({
+        video: {
+          width: DEVICE_WIDTH,
+          height: DEVICE_HEIGHT,
+          resize: 'none',
+        }
+      })
         .then((stream) => {
           player.srcObject = stream;
         })
         .catch((err) => {
+          snackbar.labelText = 'You must share your screen to record.';
+          snackbar.open();
           console.log("Screen media:", err);
         });
       break;
@@ -74,7 +87,8 @@ const loadPage = async function(page) {
       const {Replay} = await import('./replay/replay.js');
       let replay = Replay({});
       active = replay;
-      let heatmapControl = new MDCSwitch(document.querySelector('.mdc-switch'));
+      let heatmapControl = new MDCSwitch(document.querySelector('#mdc-switch-heatmap'));
+      let exportControl = new MDCSwitch(document.querySelector('#mdc-switch-export'));
       replay.connect(document.getElementById('a').getContext('2d'));
       break;
     case 'data':
