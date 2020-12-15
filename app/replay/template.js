@@ -15,6 +15,13 @@ export const template = (data) => html`
         </div>
       </div>
       <div class="mdc-layout-grid__cell--span-4">
+        <div>
+          <span>Buffering: ${data.buffering} </span>
+          <br>
+          <span>Buffered: ${data.bufferingDetails.map(v => v ? '1' : '0')} </span>
+          <br>
+          <span>Preloaded frames: ${data.preloadedFrames} </span>
+        </div>
         <div id="mdc-switch-heatmap" class="mdc-switch">
           <div class="mdc-switch__track"></div>
           <div class="mdc-switch__thumb-underlay">

@@ -9,7 +9,7 @@ import {MDCSnackbar} from '@material/snackbar';
 
 const snackbar = MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
 
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 import {render as renderTmpl} from 'lit-html';
 
 import {template} from './template.js'
@@ -150,9 +150,10 @@ export function Diagnosis(spec) {
 
   init();
 
-  let connect = function(context) {
+  let connect = function (context) {
     Rect({x: 0, y: 0, width: context.canvas.width, height: context.canvas.height}).clear(context);
     socket = io.connect('http://localhost');
+
     socket.on('news', function (data) {
       data.X = data.X / DEVICE_WIDTH;
       data.Y = data.Y / DEVICE_HEIGHT;
@@ -205,8 +206,8 @@ export function Diagnosis(spec) {
       }
     });
 
-    socket.on('connect_error', err => {
-      snackbar.labelText = 'Can\'t connect to eye tracker.';
+    socket.io.on('error', err => {
+      snackbar.labelText = `Can\'t connect to eye tracker.`;
       snackbar.open();
     })
   }

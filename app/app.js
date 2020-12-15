@@ -72,6 +72,7 @@ const loadPage = async function(page) {
           width: DEVICE_WIDTH,
           height: DEVICE_HEIGHT,
           resize: 'none',
+          cursor: 'never'
         }
       })
         .then((stream) => {

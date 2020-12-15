@@ -15,7 +15,10 @@ export function Storage(spec = {}) {
 
   let get = async function(id, callback) {
     const cache = await caches.open('gaze');
-    const response = await cache.match(new Request('/gaze/' + id));
+    const response = await cache.match('/gaze/' + id, {
+      ignoreMethod: true,
+      ignoreVary: true
+    });
 
     if (response) {
       response.json().then((value) => callback(value));

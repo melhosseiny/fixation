@@ -47,7 +47,7 @@ function WorkerPool(spec = {n: 10}) {
     const maxLoad = Math.max(10, ...load);
     const color = Math.max(...load) > 7.5 ? HIGH_LOAD_COLOR : (Math.max(...load) > 2.5 ? MEDIUM_LOAD_COLOR : LOW_LOAD_COLOR);
     Rect({x: 0, y: 0, width: loadCtx.canvas.width, height: loadCtx.canvas.height}).clear(loadCtx);
-    Points({points: load.map((l,i) => Point({x: i, y: l / maxLoad}))}).renderTimeline(loadCtx, 1, RAW_DATA_COLOR);
+    Points({points: load.map((l,i) => Point({x: i, y: l / maxLoad}))}).renderTimeline(loadCtx, 1, color);
 
     return workers[minIndex];
   }

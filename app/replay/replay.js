@@ -13,7 +13,64 @@ const snackbar = MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
 import {render as renderTmpl} from 'lit-html';
 import {DateTime, Duration} from 'luxon';
 
-import {template} from './template.js'
+import {template} from './template.js';
+
+const BUFFER_SIZE = 24;
+const POOL_SIZE = 1;
+
+let frames = [];
+
+function WorkerPool(spec = {n: POOL_SIZE}) {
+  let {n} = spec;
+  let workers = new Array(n);
+
+  let init = function(callback) {
+    workers.fill(undefined);
+    for (let i = 0; i < workers.length; i++) {
+      workers[i] = new Worker('/buffer.js');
+
+      workers[i].onmessage = function(e) {
+        console.log("bufferMessage", e.data);
+        e.data.forEach(frame => {
+          const div = document.createElement('div');
+          const link = document.createElement('link');
+          link.setAttribute('crossorigin', 'anonymous');
+          link.rel = 'preload';
+          link.as = 'image';
+          link.href = frame.img;
+          div.id = 'frame' + frame.id;
+          //div.style.width = '100px';
+          //div.style.height = '100px';
+          div.style['background-image'] = 'url(' + frame.img + ')';
+          delete frame.img;
+          document.head.appendChild(link);
+          document.body.appendChild(div);
+        });
+        frames.push(...e.data);
+        callback();
+      }
+    }
+  }
+
+  let work = function(start) {
+    for (let i = 0; i < workers.length; i++) {
+      console.log('buffering ...', start + BUFFER_SIZE * i);
+      workers[i].postMessage({
+        start: start + BUFFER_SIZE * i
+      });
+    }
+  }
+
+  let terminateAll = function() {
+    workers.forEach(worker => worker.terminate());
+  }
+
+  return Object.freeze({
+    init,
+    work,
+    terminateAll
+  })
+}
 
 export function Replay(spec) {
   let lastFixatedEl = undefined;
@@ -27,7 +84,6 @@ export function Replay(spec) {
   let tiles = surface.tiles().map(t => Rect(t));
   let heatmap = Heatmap({tiles: tiles});
   let context;
-  let frames = [];
   let algorithm = Algorithm({});
 
   let toggleShowHeatmap = function() {
@@ -35,14 +91,18 @@ export function Replay(spec) {
   }
 
   let toggleExportToVideo = function() {
-    spec.exportToVideo = !spec.exportToVideo;
     if (spec.playing) {
-      mediaRecorder.start();
+      if (spec.exportToVideo) {
+        mediaRecorder.stop();
+      } else {
+        mediaRecorder.start();
+      }
     }
+    spec.exportToVideo = !spec.exportToVideo;
     render(spec);
   }
 
-  let firstTimestamp = undefined;
+  let tf = undefined;
   let requestId = undefined;
 
   let fps;
@@ -64,18 +124,18 @@ export function Replay(spec) {
     return "background-image:-webkit-linear-gradient(left, #b91f1f " + spec.position/spec.max*100 + "%, #a5a5a5 " + spec.position/spec.max*100 + "%, #a5a5a5 " + (frames.length+spec.position)/spec.max*100 + "%, #757575 " + (frames.length+spec.position)/spec.max*100 + "%)";
   }
 
+  let seekStart = 0;
+
   let seek = function() {
     let prevPosition = spec.position;
     spec.position = +document.getElementById("seek").value;
+    seekStart = spec.position;
     console.log(prevPosition, spec.position);
+    spec.bufferingDetails = Array(Math.ceil((spec.max - seekStart) / BUFFER_SIZE)).fill(false);
     heatmap.reset();
-    if (spec.position < prevPosition) {
-      frames = [];
-      load(spec.position);
-    } else if (spec.position > prevPosition){
-      let diff = spec.position - prevPosition;
-      Array(diff).fill().forEach(function() { frames.shift(); });
-    }
+    frames = [];
+    load(spec.position);
+    spec.preloadedFrames = frames.length;
     render(spec);
   }
 
@@ -86,6 +146,9 @@ export function Replay(spec) {
   let init = () => {
     Object.assign(spec, {
       loaded: false,
+      buffering: false,
+      bufferingDetails: [],
+      preloadedFrames: 0,
       playing: false,
       position: 0,
       time: '00:00:00',
@@ -108,12 +171,21 @@ export function Replay(spec) {
   let ti;
 
   let replay = function(timestamp) {
+    console.log("replay", frames.length, BUFFER_SIZE*POOL_SIZE, spec.position, spec.max, (spec.position + BUFFER_SIZE*POOL_SIZE) % BUFFER_SIZE*POOL_SIZE);
+    if (!spec.buffering && (spec.position - seekStart + BUFFER_SIZE*POOL_SIZE) % BUFFER_SIZE*POOL_SIZE === 0) {
+      load(spec.position + (BUFFER_SIZE*POOL_SIZE));
+    }
     if (spec.position === spec.max) {
       console.log("no frame");
       spec.playing = !spec.playing;
       spec.position = 0;
-      load(spec.position);
+      seekStart = 0;
+      spec.bufferingDetails = Array(Math.ceil(spec.max / BUFFER_SIZE)).fill(false);
+      heatmap.reset();
+      frames = [];
       spec.time = Duration.fromMillis(0).toFormat("hh:mm:ss");
+      load(spec.position);
+      spec.preloadedFrames = frames.length;
       render(spec);
       return;
     }
@@ -123,7 +195,7 @@ export function Replay(spec) {
       ti = t0;
     }
 
-    if (timestamp - ti > 1000 / (8 || (fps*1.5))) {
+    if (timestamp - ti > 1000 / (9 || fps)) {
       let frame = frames.shift();
 
       if (frame) {
@@ -138,12 +210,13 @@ export function Replay(spec) {
         if (heatmap.getCountArr().buffer.byteLength !== 0) {
           worker.postMessage({count: count, gaze: gaze_buffer}, [count.buffer, gaze_buffer]);
         }
-        context.drawImage(frame.preloadedImg, 0, 0, context.canvas.width, context.canvas.height);
+        context.drawImage(document.getElementById('frame' + frame.id).attributeStyleMap.get('background-image'), 0, 0, context.canvas.width, context.canvas.height);
         if (spec.showHeatmap) { heatmap.render(context); }
+        document.getElementById('frame' + frame.id).remove();
 
         let normalizedDuration = algorithm.normalize(frame.duration, 100, 400) * 50;
         console.log('durationr', normalizedDuration);
-        Circle({x: fixation.getX(), y: fixation.getY(), r: normalizedDuration}).render(context, FIXATION_COLOR);
+        Circle({x: fixation.getX(), y: fixation.getY(), r: normalizedDuration || 20}).render(context, FIXATION_COLOR);
 
         //Circle({x: fixation.getX(), y: fixation.getY(), r: 20}).render(context, FIXATION_COLOR);
 
@@ -152,9 +225,10 @@ export function Replay(spec) {
         }
         prevFixation = fixation;
 
-        spec.time = Duration.fromMillis((frame.timestamp - firstTimestamp)).toFormat("hh:mm:ss");
+        spec.time = Duration.fromMillis((frame.timestamp - tf)).toFormat("hh:mm:ss");
         spec.position++;
 
+        spec.preloadedFrames = frames.length;
         render(spec);
         ti = timestamp;
       }
@@ -164,56 +238,19 @@ export function Replay(spec) {
   }
 
   let load = function(start) {
-    for (let frame=start; frame <= spec.max; frame++) {
-      storage.get(frame, (v) => {
-        if (v) {
-          frames.push(v);
-          //console.log(frames.length);
-          if (frames.length === spec.max) {
-            spec.totalTime = Duration.fromMillis((frames[spec.max-1].timestamp - frames[0].timestamp)).toFormat("hh:mm:ss");
-            firstTimestamp = frames[0].timestamp;
-            //console.log(frames);
-            snackbar.labelText = 'Preloading frames';
-            snackbar.open();
-            preloadImages();
-          }
-          render(spec);
-        }
-      });
+    console.log('bufferingDetails', spec.bufferingDetails, start, seekStart, (start - seekStart) / BUFFER_SIZE);
+    if (spec.bufferingDetails[(start - seekStart) / BUFFER_SIZE]) {
+      return;
     }
-  }
-
-  let preloadImages = () => {
-    for (let i = 0; i < frames.length; i++) {
-      let img = new Image();
-      img.onload = function() {
-        frames[i].preloadedImg = img;
-        //console.log(i, frames.length);
-        if (i === frames.length - 1) {
-          console.log('preloaded all images');
-          frames = frames.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : -1);
-          console.log('sorted all frames');
-          const intrinsicFPS = frames.length * 1000 / (frames[spec.max-1].timestamp - frames[0].timestamp);
-          console.log('intrisic fps', intrinsicFPS);
-          fps = intrinsicFPS;
-
-          snackbar.labelText = `Preloaded all frames (FPS = ${Math.round(fps * 1.5)})`;
-          snackbar.open();
-
-          spec.loaded = true;
-          render(spec);
-        }
-      }
-      img.src = frames[i].img;
-
-      /*if (frames[i+1] && frames[i+1].timestamp < frames[i].timestamp) {
-        console.log('found 1!!', frames[i+1].timestamp, frames[i].timestamp);
-        console.log('found 1!!', frames[i+1].id, frames[i].id);
-      }*/
-    }
+    spec.buffering = true;
+    spec.preloadedFrames = frames.length;
+    spec.bufferingDetails[(start - seekStart) / BUFFER_SIZE] = true;
+    render(spec);
+    workerPool.work(start);
   }
 
   let worker = undefined;
+  let workerPool = undefined;
   let mediaRecorder = undefined;
   let chunks = [];
 
@@ -229,12 +266,25 @@ export function Replay(spec) {
     }
     worker.onerror = function(e) { console.log("onerror", e); }
 
-    mediaRecorder = new MediaRecorder(context.canvas.captureStream(30));
+    workerPool = WorkerPool();
+    workerPool.init(() => {
+      spec.loaded = true;
+      spec.buffering = false;
+      spec.preloadedFrames = frames.length;
+      render(spec);
+    });
+
+    mediaRecorder = new MediaRecorder(context.canvas.captureStream(60), { mimeType: "video/webm; codecs=vp9" });
     mediaRecorder.ondataavailable = function(e) {
       chunks.push(e.data);
+      console.log('chunks', e.data);
     };
     mediaRecorder.onstop = function(e) {
       const video = document.getElementById('captured-video');
+      /*video.onloadedmetadata = function() {
+        video.currentTime = Number.MAX_SAFE_INTEGER;
+        console.log(video.duration);
+      }*/
       video.src = URL.createObjectURL(new Blob(chunks, { 'type' : 'video/webm' }));
       chunks = [];
     };
@@ -246,7 +296,22 @@ export function Replay(spec) {
         snackbar.open();
       }
       console.log("max", spec.max);
-      load(0);
+
+      storage.get(0, (first) => {
+        if (first) {
+          tf = first.timestamp;
+          storage.get(spec.max-1, (last) => {
+            if (last) {
+              const tl = last.timestamp;
+              spec.totalTime = Duration.fromMillis(tl - tf).toFormat("hh:mm:ss");
+              spec.bufferingDetails = Array(Math.ceil(spec.max / BUFFER_SIZE)).fill(false);
+              spec.preloadedFrames = frames.length;
+              render(spec);
+              load(0);
+            }
+          })
+        }
+      });
     });
   }
 

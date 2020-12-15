@@ -26,8 +26,14 @@ export function Data(spec) {
   }
 
   let exportData = function() {
-    download(JSON.stringify(frames), 'experiment' + DateTime.local().toMillis() + '.json', 'text/json');
-    console.log(frames);
+    let dataStr = '[';
+    let i = 0;
+    for (i=0; i < frames.length - 1; i++) {
+      console.log(frames[i],i);
+      dataStr += JSON.stringify(frames[i]) + ',';
+    }
+    dataStr += JSON.stringify(frames[i]) + ']';
+    download(dataStr, 'experiment' + DateTime.local().toMillis() + '.json', 'text/json');
   }
 
   let deleteData = function() {
@@ -50,20 +56,31 @@ export function Data(spec) {
       spec.max = keys.length;
       render(spec);
       console.log("max", spec.max);
-      load(0);
+      storage.get(0, (first) => {
+        if (first) {
+          const tf = first.timestamp;
+          storage.get(spec.max-1, (last) => {
+            if (last) {
+              const tl = last.timestamp;
+              spec.totalTime = Duration.fromMillis(tl - tf).toFormat("hh:mm:ss");
+              render(spec);
+              load(0);
+            }
+          })
+        }
+      });
     });
   }
 
   let load = function(start) {
     frames = [];
+
     for (let frame=start; frame <= spec.max; frame++) {
       storage.get(frame, (v) => {
         if (v) {
           frames.push(v);
           console.log(frames.length, spec.max);
           if (frames.length === spec.max) {
-            spec.totalTime = Duration.fromMillis((frames[spec.max-1].timestamp - frames[0].timestamp)).toFormat("hh:mm:ss");
-            render(spec);
             console.log("max reached");
           }
         }
