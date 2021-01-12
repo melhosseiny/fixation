@@ -66,6 +66,7 @@ const loadPage = async function(page) {
       record.connect();
 
       const player = document.getElementById('player');
+      const user = document.getElementById('user');
 
       navigator.mediaDevices.getDisplayMedia({
         video: {
@@ -74,15 +75,27 @@ const loadPage = async function(page) {
           resize: 'none',
           cursor: 'never'
         }
-      })
-        .then((stream) => {
-          player.srcObject = stream;
-        })
-        .catch((err) => {
-          snackbar.labelText = 'You must share your screen to record.';
-          snackbar.open();
-          console.log("Screen media:", err);
-        });
+      }).then((stream) => {
+        player.srcObject = stream;
+      }).catch((err) => {
+        snackbar.labelText = 'You must share your screen to record.';
+        snackbar.open();
+        console.log("Screen media:", err);
+      });
+
+      navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          width: 640,
+          height: 480
+        }
+      }).then((stream) => {
+        user.srcObject = stream;
+      }).catch((err) => {
+        snackbar.labelText = 'User cam not available.';
+        snackbar.open();
+        console.log("User media:", err);
+      });
       break;
     case 'replay':
       const {Replay} = await import('./replay/replay.js');

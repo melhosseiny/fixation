@@ -7,6 +7,7 @@ export const template = (data) => html`
       </div>
       <div class="mdc-layout-grid__cell--span-4">
         <video id="player" playsinline autoplay loop muted></video>
+        <video id="user" playsinline autoplay loop muted></video>
       </div>
       <div class="mdc-layout-grid__cell--span-4">
         ${getRecordButton(data)}

@@ -19,7 +19,6 @@ function WorkerPool(spec = {n: 10}) {
   let workers = new Array(n);
   let load = new Array(n);
 
-
   let loadCtx = document.getElementById('load').getContext('2d');
 
   let init = function() {
@@ -29,7 +28,7 @@ function WorkerPool(spec = {n: 10}) {
       workers[i] = new Worker('/storage.js');
 
       workers[i].onmessage = function(e) {
-        //console.log("onmessage load", e.data);
+        console.log("onmessage load", e.data);
         load[i] = e.data;
         //console.log(load);
       }
@@ -106,6 +105,11 @@ export function Record(spec) {
     offscreenCanvas.height = CANVAS_HEIGHT;
     const offscreenContext = offscreenCanvas.getContext('2d');
 
+    const offscreenCanvas2 = document.createElement('canvas');
+    offscreenCanvas2.width = 640;
+    offscreenCanvas2.height = 480;
+    const offscreenContext2 = offscreenCanvas2.getContext('2d');
+
     let workerPool = WorkerPool();
     workerPool.init();
 
@@ -131,10 +135,12 @@ export function Record(spec) {
           if (fixation) {
             fixationCount += 1;
 
-            offscreenContext.drawImage(document.getElementById('player'),0,0,offscreenContext.canvas.width,offscreenContext.canvas.height);
-            let pxls = offscreenContext.getImageData(0,0,offscreenContext.canvas.width,offscreenContext.canvas.height);
+            offscreenContext.drawImage(document.getElementById('player'), 0, 0, offscreenContext.canvas.width, offscreenContext.canvas.height);
+            offscreenContext2.drawImage(document.getElementById('user'), 0, 0, offscreenContext2.canvas.width, offscreenContext2.canvas.height);
+            let pxls = offscreenContext.getImageData(0, 0, offscreenContext.canvas.width, offscreenContext.canvas.height);
+            let pxls2 = offscreenContext2.getImageData(0, 0, offscreenContext2.canvas.width, offscreenContext2.canvas.height);
 
-            workerPool.getWorkerWithMinLoad().postMessage({x: fixation.getX(), y: fixation.getY(), duration: fixation.getDuration(), id: spec.id, timestamp: fixation.getTimestamp(), pxls: pxls.data.buffer}, [pxls.data.buffer]);
+            workerPool.getWorkerWithMinLoad().postMessage({x: fixation.getX(), y: fixation.getY(), duration: fixation.getDuration(), id: spec.id, timestamp: fixation.getTimestamp(), pxls: pxls.data.buffer, pxls2: pxls2.data.buffer}, [pxls.data.buffer, pxls2.data.buffer]);
             spec.id++;
 
             if (fixationCount === 20) {
