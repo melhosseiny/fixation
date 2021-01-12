@@ -1,5 +1,5 @@
 import {Storage} from '../storage.js'
-import {DEVICE_WIDTH, DEVICE_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT, Rect, Points, Point} from '../geo.js';
+import {CANVAS_WIDTH, CANVAS_HEIGHT, Rect, Points, Point} from '../geo.js';
 import {INIT_FIXATION_WINDOW} from '../eye.js';
 import {Fixation, GazePoint, GazeWindow} from '../eye.js'
 import {LOW_LOAD_COLOR, MEDIUM_LOAD_COLOR, HIGH_LOAD_COLOR} from '../color.js';
@@ -123,8 +123,6 @@ export function Record(spec) {
     })
 
     socket.on('news', function (data) {
-      data.X = data.X / DEVICE_WIDTH;
-      data.Y = data.Y / DEVICE_HEIGHT;
       if (spec.recording) {
         let gp = GazePoint({x: data.X, y: data.Y, t: data.Timestamp});
         dataPoints.push(gp);

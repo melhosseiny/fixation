@@ -1,4 +1,3 @@
-import {DEVICE_WIDTH, DEVICE_HEIGHT} from '../geo.js';
 import {Point, Points, Line, Circle, Rect, Ease} from '../geo.js';
 import {INIT_FIXATION_WINDOW} from '../eye.js';
 import {Fixation, GazePoint, GazeWindow} from '../eye.js';
@@ -155,9 +154,6 @@ export function Diagnosis(spec) {
     socket = io.connect('http://localhost');
 
     socket.on('news', function (data) {
-      data.X = data.X / DEVICE_WIDTH;
-      data.Y = data.Y / DEVICE_HEIGHT;
-
       let p = Point({x: data.X, y: data.Y});
       if (gazeHistory.length === 30) { gazeHistory.shift(); }
       gazeHistory.push(p);
