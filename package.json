@@ -1,13 +1,14 @@
 {
   "name": "fixation",
   "version": "0.0.1",
+  "type": "module",
   "engines": {
     "node": "14.x"
   },
   "scripts": {
-    "start": "node  --experimental-modules app.mjs",
-    "build": "webpack --config webpack.config.prod.js",
-    "build:watch": "webpack -w --config webpack.config.dev.js"
+    "start": "node app",
+    "build": "webpack --config webpack.config.prod.cjs",
+    "build:watch": "webpack -w --config webpack.config.dev.cjs"
   },
   "dependencies": {
     "@material/button": "^5.1.0",

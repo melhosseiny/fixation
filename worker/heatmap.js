@@ -1,8 +1,5 @@
-//importScripts('bundle.js')
-const DEVICE_WIDTH = 1920;
-const DEVICE_HEIGHT = 1080;
-const CANVAS_WIDTH = 1920;
-const CANVAS_HEIGHT = 1080;
+const CANVAS_WIDTH = 1280;
+const CANVAS_HEIGHT = 720;
 const GT_BASE = [30, 15];
 const GT_CONSIDER = [20, 20];
 

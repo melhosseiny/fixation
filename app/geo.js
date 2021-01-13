@@ -5,8 +5,8 @@ import {Algorithm} from './algorithm.js';
 export const DEVICE_WIDTH = window.screen.width * window.devicePixelRatio;
 export const DEVICE_HEIGHT = window.screen.height * window.devicePixelRatio;
 
-export const CANVAS_WIDTH = DEVICE_WIDTH;
-export const CANVAS_HEIGHT = DEVICE_HEIGHT;
+export const CANVAS_WIDTH = 1280;
+export const CANVAS_HEIGHT = 720;
 
 let color = Color({});
 let algorithm = Algorithm({});

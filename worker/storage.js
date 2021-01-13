@@ -1,8 +1,8 @@
 const IMAGE_TYPE = "image/webp";
 const IMAGE_QUALITY = 0.8;
 
-const CANVAS_WIDTH = 1920;
-const CANVAS_HEIGHT = 1080;
+const CANVAS_WIDTH = 1280;
+const CANVAS_HEIGHT = 720;
 
 const USER_CANVAS_WIDTH = 640;
 const USER_CANVAS_HEIGHT = 480;
