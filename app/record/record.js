@@ -1,7 +1,7 @@
 import {Storage} from '../storage.js'
 import {CANVAS_WIDTH, CANVAS_HEIGHT, Rect, Points, Point} from '../geo.js';
 import {INIT_FIXATION_WINDOW} from '../eye.js';
-import {Fixation, GazePoint, GazeWindow} from '../eye.js'
+import {Fixation, GazePoint, GazeWindow} from '../eye.js';
 import {LOW_LOAD_COLOR, MEDIUM_LOAD_COLOR, HIGH_LOAD_COLOR} from '../color.js';
 
 import {MDCSnackbar} from '@material/snackbar';
@@ -109,6 +109,9 @@ export function Record(spec) {
     offscreenCanvas2.width = 640;
     offscreenCanvas2.height = 480;
     const offscreenContext2 = offscreenCanvas2.getContext('2d');
+
+    const loadCtx = document.getElementById('load').getContext('2d');
+    Rect({x: 0, y: 0, width: loadCtx.canvas.width, height: loadCtx.canvas.height}).clear(loadCtx);
 
     let workerPool = WorkerPool();
     workerPool.init();

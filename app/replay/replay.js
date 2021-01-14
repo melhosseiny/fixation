@@ -2,7 +2,7 @@ import {Storage} from '../storage.js';
 import {CANVAS_WIDTH, CANVAS_HEIGHT, Point, Points, Line, Circle, Rect, Heatmap} from '../geo.js';
 import {REPLAY_FPS} from '../eye.js';
 import {Fixation, GazePoint, GazeWindow} from '../eye.js';
-import {FIXATION_COLOR, SACCADE_COLOR} from '../color.js';
+import {FIXATION_COLOR, SACCADE_COLOR, LOW_LOAD_COLOR, MEDIUM_LOAD_COLOR, HIGH_LOAD_COLOR} from '../color.js';
 
 import {Algorithm} from '../algorithm.js';
 
@@ -33,17 +33,9 @@ function WorkerPool(spec = {n: POOL_SIZE}) {
         console.log("bufferMessage", e.data);
         e.data.forEach(frame => {
           const div = document.createElement('div');
-          const link = document.createElement('link');
-          link.setAttribute('crossorigin', 'anonymous');
-          link.rel = 'preload';
-          link.as = 'image';
-          link.href = frame.img;
           div.id = 'frame' + frame.id;
-          //div.style.width = '100px';
-          //div.style.height = '100px';
           div.style['background-image'] = 'url(' + frame.img + ')';
           delete frame.img;
-          document.head.appendChild(link);
           document.body.appendChild(div);
         });
         frames.push(...e.data);
@@ -229,6 +221,11 @@ export function Replay(spec) {
         spec.position++;
 
         spec.preloadedFrames = frames.length;
+        const bufferCtx = document.getElementById('buffer').getContext('2d');
+        const buffer_health = spec.preloadedFrames / (BUFFER_SIZE * 2);
+        const color = buffer_health > 0.9 ? HIGH_LOAD_COLOR : buffer_health > 0.8 ? MEDIUM_LOAD_COLOR : LOW_LOAD_COLOR;
+        Rect({x: 0, y: 0, width: bufferCtx.canvas.width, height: bufferCtx.canvas.height}).clear(bufferCtx);
+        Rect({x: 0, y: (1 - buffer_health) * bufferCtx.canvas.height, width: bufferCtx.canvas.width, height: buffer_health * bufferCtx.canvas.height}).render(bufferCtx, undefined, color);
         render(spec);
         ti = timestamp;
       }
@@ -257,6 +254,8 @@ export function Replay(spec) {
   let connect = function(c) {
     context = c;
     Rect({x: 0, y: 0, width: context.canvas.width, height: context.canvas.height}).clear(context);
+    const bufferCtx = document.getElementById('buffer').getContext('2d');
+    Rect({x: 0, y: 0, width: bufferCtx.canvas.width, height: bufferCtx.canvas.height}).clear(bufferCtx);
 
     worker = new Worker("/heatmap.js");
     worker.onmessage = function(e) {

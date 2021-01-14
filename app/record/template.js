@@ -4,9 +4,9 @@ export const template = (data) => html`
   <div class="mdc-layout-grid">
     <div class="mdc-layout-grid__inner">
       <div class="mdc-layout-grid__cell--span-4">
+        <video id="player" playsinline autoplay loop muted></video>
       </div>
       <div class="mdc-layout-grid__cell--span-4">
-        <video id="player" playsinline autoplay loop muted></video>
         <video id="user" playsinline autoplay loop muted></video>
       </div>
       <div class="mdc-layout-grid__cell--span-4">

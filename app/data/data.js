@@ -29,7 +29,7 @@ export function Data(spec) {
     let dataStr = '[';
     let i = 0;
     for (i=0; i < frames.length - 1; i++) {
-      console.log(frames[i],i);
+      //console.log(frames[i],i);
       dataStr += JSON.stringify(frames[i]) + ',';
     }
     dataStr += JSON.stringify(frames[i]) + ']';
