@@ -8,13 +8,20 @@ export const template = (data) => html`
       <div class="mdc-layout-grid__cell--span-8">
         <canvas @click="${fullscreen}" id="a" width="${CANVAS_WIDTH}" height="${CANVAS_HEIGHT}"></canvas>
         <div id="canvas-ctrl">
-          <button @click="${data.play}" ?disabled="${!data.loaded || data.buffering}" class="mdc-icon-button material-icons">${data.playing? html`stop`: html`play_arrow`}</button>
-          <input id="seek" ?disabled="${!data.loaded || data.buffering}" @input="${data.seek}" .value="${data.position}" max="${data.max}" type="range" style="${data.seekStyle}">
+          <button @click="${data.play}" ?disabled="${!data.loaded}" class="mdc-icon-button material-icons">${data.playing? html`stop`: html`play_arrow`}</button>
+          <input id="seek" ?disabled="${!data.loaded}" @input="${data.seek}" .value="${data.position}" max="${data.max}" type="range" style="${data.seekStyle}">
           <span id="time">${data.time}</span>
           <span id="total-time">&nbsp;/ ${data.totalTime}</span>
         </div>
       </div>
       <div class="mdc-layout-grid__cell--span-4">
+        <div>
+          <span>Buffering: ${data.buffering} </span>
+          <br>
+          <span>Buffered: ${data.bufferingDetails.map(v => v ? '1' : '0')} </span>
+          <br>
+          <span>Preloaded frames: ${data.preloadedFrames} </span>
+        </div>
         <div id="mdc-switch-heatmap" class="mdc-switch">
           <div class="mdc-switch__track"></div>
           <div class="mdc-switch__thumb-underlay">
