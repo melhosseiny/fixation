@@ -1,0 +1,35 @@
+1
+00:00:00,080 --> 00:00:04,240
+Fixation is a free and open-source framework 
+for experimental eye movement research,  
+
+2
+00:00:04,240 --> 00:00:08,160
+agnostic to the source of the raw gaze stream 
+and can be used with any eye tracking platform,  
+
+3
+00:00:08,160 --> 00:00:11,040
+by mapping data to a JSON format 
+and streaming it in real time.
+
+4
+00:00:12,400 --> 00:00:16,640
+A researcher can record and visualize gaze data 
+and export it for analysis using an offline  
+
+5
+00:00:16,640 --> 00:00:20,080
+web application, without proprietary 
+components or licensing restrictions.
+
+6
+00:00:21,040 --> 00:00:24,160
+We leverage web technologies to 
+address data privacy concerns,  
+
+7
+00:00:24,160 --> 00:00:29,760
+and demonstrate support for high-frequency 
+recording and real-time visualization.
+

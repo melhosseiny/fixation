@@ -11,6 +11,7 @@ let server = http.Server(app);
 
 app.use(express.static('dist'));
 app.use(express.static('worker'));
+app.use(express.static('media'));
 
 app.get('*', function (req, res) {
   res.sendFile(__dirname + '/index.html');
