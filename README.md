@@ -13,6 +13,26 @@ A universal framework for experimental eye movement research.
 | Tobii EyeX       | [fixation-link-eyex][1] |
 | Simulator        | [fixation-link-sim][2]  |
 
+## Citation
+
+[https://doi.org/10.1145/3448018.3458007](https://doi.org/10.1145/3448018.3458007)
+
+    @inproceedings{10.1145/3448018.3458007,
+      author = {Elshamy, Mostafa and Khooshabeh, Peter},
+      title = {Fixation: A universal framework for experimental eye movement research},
+      year = {2021},
+      series = {ETRA '21 Short Papers},
+      booktitle = {ACM Symposium on Eye Tracking Research and Applications},
+      location = {Virtual Event, Germany},
+      articleno = {18},
+      numpages = {5},
+      isbn = {978-1-4503-8345-5},
+      publisher = {ACM},
+      address = {New York, NY, USA},
+      url = {https://doi.org/10.1145/3448018.3458007},
+      doi = {10.1145/3448018.3458007}
+    }
+
 ## License
 
 Fixation is [MIT Licensed](/LICENSE).

@@ -101,6 +101,7 @@ export function Data(spec) {
           getCacheInfo();
         }
       });
+  
       data.forEach((document, id) => {
         caches.open('gaze').then((cache) => {
           cache.put('/gaze/' + id, new Response(JSON.stringify(document)));
