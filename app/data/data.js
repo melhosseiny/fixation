@@ -21,18 +21,27 @@ export function Data(spec) {
     a.href = URL.createObjectURL(file);
     a.download = fileName;
     a.click();
-    snackbar.labelText = 'Exporting data ...';
-    snackbar.open();
+    snackbar.close();
   }
 
-  let exportData = function() {
+  let exportData = async function() {
+    snackbar.labelText = 'Exporting data ...';
+    snackbar.timeoutMs = -1;
+    snackbar.open();
+
     let dataStr = '[';
     let i = 0;
-    for (i=0; i < frames.length - 1; i++) {
-      //console.log(frames[i],i);
-      dataStr += JSON.stringify(frames[i]) + ',';
+    const cache = await caches.open('gaze');
+
+    for (i = 0; i < spec.max; i++) {
+      const response = await cache.match('/gaze/' + i, {
+        ignoreMethod: true,
+        ignoreVary: true
+      });
+      const v = await response.json();
+      dataStr += JSON.stringify(v) + (i === spec.max - 1 ? '' : ',');
     }
-    dataStr += JSON.stringify(frames[i]) + ']';
+    dataStr += ']';
     download(dataStr, 'experiment' + DateTime.local().toMillis() + '.json', 'text/json');
   }
 
@@ -64,28 +73,11 @@ export function Data(spec) {
               const tl = last.timestamp;
               spec.totalTime = Duration.fromMillis(tl - tf).toFormat("hh:mm:ss");
               render(spec);
-              load(0);
             }
           })
         }
       });
     });
-  }
-
-  let load = function(start) {
-    frames = [];
-
-    for (let frame=start; frame <= spec.max; frame++) {
-      storage.get(frame, (v) => {
-        if (v) {
-          frames.push(v);
-          console.log(frames.length, spec.max);
-          if (frames.length === spec.max) {
-            console.log("max reached");
-          }
-        }
-      });
-    }
   }
 
   let handleFileSelect = function(evt) {
@@ -103,6 +95,7 @@ export function Data(spec) {
     reader.onload = function(e) {
       console.log("file loaded", e);
       const data = JSON.parse(e.target.result);
+
       storage.clear("gaze", deleted => {
         if (deleted) {
           getCacheInfo();
@@ -114,6 +107,7 @@ export function Data(spec) {
         })
       })
     }
+
     reader.onprogress = function(e) {
       if (e.lengthComputable) {
         const percentLoaded = Math.round((e.loaded / e.total) * 100);
