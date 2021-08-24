@@ -4,7 +4,8 @@ A universal framework for experimental eye movement research.
 
 ![Replay module screenshot](/media/fixation-screenshot.png)
 
-[Try it](https://polar-ocean-09884.herokuapp.com/)
+- [Try it](https://polar-ocean-09884.herokuapp.com/)
+- [Read the paper](https://polar-ocean-09884.herokuapp.com/fixation-paper.pdf)
 
 ## Fixation Links
 
