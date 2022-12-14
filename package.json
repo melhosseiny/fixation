@@ -25,7 +25,7 @@
     "@material/theme": "^5.1.0",
     "@material/top-app-bar": "^5.1.0",
     "@material/typography": "^5.1.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "luxon": "^1.23.0",
     "pixelmatch": "^5.2.0",
     "pwa-helpers": "^0.9.1",
