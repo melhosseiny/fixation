@@ -6,7 +6,7 @@ A universal framework for experimental eye movement research.
 
 https://user-images.githubusercontent.com/3174355/130834809-fe73f30b-72c6-4e5e-a5c4-71a541839d15.mp4
 
-- [Try it](https://polar-ocean-09884.herokuapp.com/)
+- Try it: [Vercel](https://polar-ocean-09884.vercel.app/) or [Google Cloud](https://polar-ocean-09884.uc.r.appspot.com/)
 - [Read the paper](https://polar-ocean-09884.herokuapp.com/fixation-paper.pdf)
 
 ## Fixation Links
