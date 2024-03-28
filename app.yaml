@@ -1,0 +1,3 @@
+runtime: nodejs20
+network:
+  session_affinity: true

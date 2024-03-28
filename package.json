@@ -6,7 +6,7 @@
     "node": "20.x"
   },
   "scripts": {
-    "start": "node app",
+    "start": "node app.js",
     "build": "webpack -c webpack.prod.cjs",
     "build:watch": "webpack -w -c webpack.dev.cjs"
   },
