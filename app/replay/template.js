@@ -15,25 +15,47 @@ export const template = (data) => html`
         </div>
       </div>
       <div class="mdc-layout-grid__cell--span-4">
-        <div id="mdc-switch-heatmap" class="mdc-switch">
+        <button @click="${data.toggleShowHeatmap}" id="heatmap-switch" class="mdc-switch mdc-switch--unselected" type="button" role="switch" aria-checked="false">
           <div class="mdc-switch__track"></div>
-          <div class="mdc-switch__thumb-underlay">
-            <div class="mdc-switch__thumb">
-              <input @click="${data.toggleShowHeatmap}" type="checkbox" id="basic-switch" class="mdc-switch__native-control" role="switch">
+          <div class="mdc-switch__handle-track">
+            <div class="mdc-switch__handle">
+              <div class="mdc-switch__shadow">
+                <div class="mdc-elevation-overlay"></div>
+              </div>
+              <div class="mdc-switch__ripple"></div>
+              <div class="mdc-switch__icons">
+                <svg class="mdc-switch__icon mdc-switch__icon--on" viewBox="0 0 24 24">
+                  <path d="M19.69,5.23L8.96,15.96l-4.23-4.23L2.96,13.5l6,6L21.46,7L19.69,5.23z" />
+                </svg>
+                <svg class="mdc-switch__icon mdc-switch__icon--off" viewBox="0 0 24 24">
+                  <path d="M20 13H4v-2h16v2z" />
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
-        <label for="basic-switch">Show heatmap</label>
+        </button>
+        <label for="heatmap-switch">Show heatmap</label>
         <h5>Share</h5>
-        <div id="mdc-switch-export" class="mdc-switch mdc-switch--disabled">
+        <button @click="${data.toggleExportToVideo}" id="export-switch" class="mdc-switch mdc-switch--disabled" type="button" role="switch" aria-checked="false">
           <div class="mdc-switch__track"></div>
-          <div class="mdc-switch__thumb-underlay">
-            <div class="mdc-switch__thumb">
-              <input @click="${data.toggleExportToVideo}" type="checkbox" id="basic-switch" class="mdc-switch__native-control" role="switch">
+          <div class="mdc-switch__handle-track">
+            <div class="mdc-switch__handle">
+              <div class="mdc-switch__shadow">
+                <div class="mdc-elevation-overlay"></div>
+              </div>
+              <div class="mdc-switch__ripple"></div>
+              <div class="mdc-switch__icons">
+                <svg class="mdc-switch__icon mdc-switch__icon--on" viewBox="0 0 24 24">
+                  <path d="M19.69,5.23L8.96,15.96l-4.23-4.23L2.96,13.5l6,6L21.46,7L19.69,5.23z" />
+                </svg>
+                <svg class="mdc-switch__icon mdc-switch__icon--off" viewBox="0 0 24 24">
+                  <path d="M20 13H4v-2h16v2z" />
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
-        <label for="basic-switch">Export to video</label>
+        </button>
+        <label for="export-switch">Export to video</label>
         ${
           data.exportToVideo
             ? html`<video id="captured-video" autoplay controls></video>`

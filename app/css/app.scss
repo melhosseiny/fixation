@@ -1,50 +1,60 @@
-$mdc-theme-primary: #4b4b4b;
-$mdc-theme-secondary: #41b6a3;
-$mdc-theme-background: #232323;
-$mdc-theme-on-primary: #ffffff;
-$mdc-theme-on-secondary: #ffffff;
+@use "@material/button";
+@use "@material/button/styles" as button-styles;
+@use "@material/layout-grid/mdc-layout-grid";
+@use "@material/top-app-bar";
+@use "@material/top-app-bar/mdc-top-app-bar";
+@use "@material/form-field";
+@use "@material/checkbox";
+@use "@material/drawer";
+@use "@material/list";
+@use "@material/typography/mdc-typography";
+@use "@material/switch/styles" as switch-styles;
+@use "@material/icon-button";
+@use "@material/icon-button/styles" as icon-button-styles;
+@use "@material/snackbar";
+@use "@material/snackbar/mdc-snackbar";
+@use "@material/linear-progress";
 
-$mdc-typography-font-family: "Lekton";
-
-@import "@material/button/mdc-button";
-@import "@material/layout-grid/mdc-layout-grid";
-@import "@material/top-app-bar/mdc-top-app-bar";
-@import "@material/form-field/mdc-form-field";
-@import "@material/checkbox/mdc-checkbox";
-@import "@material/drawer/mdc-drawer";
-@import "@material/list/mdc-list";
-@import "@material/typography/mdc-typography";
-@import "@material/switch/mdc-switch";
-@import "@material/icon-button/mdc-icon-button";
-@import "@material/snackbar/mdc-snackbar";
-@import "@material/linear-progress/mdc-linear-progress";
+@include checkbox.core-styles;
+@include form-field.core-styles;
+@include drawer.core-styles;
+@include drawer.dismissible-core-styles;
+@include drawer.modal-core-styles;
+@include list.deprecated-core-styles;
+@include linear-progress.core-styles;
 
 :root {
+  --mdc-typography-font-family: "Lekton";
+  --mdc-theme-primary: #4b4b4b;
+  --mdc-theme-secondary: #41b6a3;
+  --mdc-theme-background: #232323;
+  --mdc-theme-on-primary: #ffffff;
+  --mdc-theme-on-secondary: #ffffff;
   --mdc-layout-grid-margin-desktop: 12px;
   --mdc-layout-grid-margin-tablet: 12px;
   --mdc-layout-grid-margin-phone: 4px;
 }
 
 .mdc-button {
-  @include mdc-button-disabled-icon-color($color: rgba(255,255,255,0.25));
-  @include mdc-button-disabled-ink-color($color: rgba(255,255,255,0.25));
+  @include button.icon-color(("disabled": rgba(255,255,255,0.25)));
+  @include button.ink-color(("disabled": rgba(255,255,255,0.25)));
 }
 
 .mdc-icon-button {
-  @include mdc-icon-button-disabled-ink-color($color: rgba(255,255,255,0.25));
+  @include icon-button.disabled-ink-color(rgba(255,255,255,0.25));
 }
 
 .mdc-top-app-bar {
-  @include mdc-top-app-bar-fill-color($color: transparent);
+  @include top-app-bar.fill-color($color: transparent);
 }
 
 .mdc-snackbar {
-  @include mdc-snackbar-fill-color($color: #41b6a3);
+  @include snackbar.fill-color($color: #41b6a3);
 }
 
 .mdc-linear-progress {
-  @include mdc-linear-progress-bar-color($color: #41b6a3);
-  @include mdc-linear-progress-buffer-color($color: rgba(65, 182, 163, 0.25));
+  @include linear-progress.bar-color($color: #41b6a3);
+  @include linear-progress.buffer-color($color: rgba(65, 182, 163, 0.25));
 }
 
 body {

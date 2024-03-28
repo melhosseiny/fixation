@@ -3,7 +3,7 @@ import {installRouter} from 'pwa-helpers/router.js';
 
 import {DEVICE_WIDTH, DEVICE_HEIGHT} from './geo.js';
 
-import {MDCRipple} from '@material/ripple/index';
+import {MDCRipple} from '@material/ripple';
 import {MDCDrawer} from "@material/drawer";
 import {MDCTopAppBar} from "@material/top-app-bar";
 import {MDCSwitch} from '@material/switch';
@@ -21,7 +21,7 @@ topAppBar.listen('MDCTopAppBar:nav', () => {
   drawer.open = !drawer.open;
 });
 
-const listEl = document.querySelector('.mdc-drawer .mdc-list');
+const listEl = document.querySelector('.mdc-drawer .mdc-deprecated-list');
 listEl.addEventListener('click', (event) => {
   drawer.open = false;
 });
@@ -46,7 +46,7 @@ let navigate = function(path) {
   const page = path === '/' ? 'diagnosis' : path.slice(1);
   console.log("page", page);
   loadPage(page);
-  render(template({title: "Fixation - " + toTitleCase(page)}), document.getElementsByTagName("title")[0]);
+  render(template({title: toTitleCase(page)}), document.getElementsByTagName("title")[0]);
   render(template({title: toTitleCase(page)}), document.getElementsByClassName("mdc-top-app-bar__title")[0]);
 }
 
@@ -56,7 +56,7 @@ const loadPage = async function(page) {
       const {Diagnosis} = await import('./diagnosis/diagnosis.js');
       let diagnosis = Diagnosis({});
       active = diagnosis;
-      let modeControl = new MDCSwitch(document.querySelector('.mdc-switch'));
+      let modeControl = new MDCSwitch(document.querySelector('#basic-switch'));
       diagnosis.connect(document.getElementById('a').getContext('2d'));
       break;
     case 'record':
@@ -101,8 +101,8 @@ const loadPage = async function(page) {
       const {Replay} = await import('./replay/replay.js');
       let replay = Replay({});
       active = replay;
-      let heatmapControl = new MDCSwitch(document.querySelector('#mdc-switch-heatmap'));
-      let exportControl = new MDCSwitch(document.querySelector('#mdc-switch-export'));
+      let heatmapControl = new MDCSwitch(document.querySelector('#heatmap-switch'));
+      let exportControl = new MDCSwitch(document.querySelector('#export-switch'));
       replay.connect(document.getElementById('a').getContext('2d'));
       break;
     case 'data':

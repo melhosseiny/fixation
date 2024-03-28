@@ -18,10 +18,18 @@ module.exports = {
             },
           },
           {loader: 'extract-loader'},
-          {loader: 'css-loader'},
+          {loader: 'css-loader',
+            options: {
+              esModule: false,
+            }
+          },
           {loader: 'postcss-loader',
             options: {
-              plugins: () => [autoprefixer()],
+              postcssOptions: {
+                plugins: [
+                  "autoprefixer",
+                ],
+              },
             },
           },
           {

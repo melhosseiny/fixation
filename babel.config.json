@@ -1,10 +1,10 @@
-module.exports = {
-  presets: [
+{
+  "presets": [
     [
       "@babel/env"
     ]
   ],
-  plugins: [
+  "plugins": [
     "@babel/plugin-transform-object-assign"
   ]
-};
+}
